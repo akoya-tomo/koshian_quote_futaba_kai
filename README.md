@@ -1,0 +1,1 @@
+# koshian_quote_futaba_kai
