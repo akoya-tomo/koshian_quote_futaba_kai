@@ -1,4 +1,4 @@
-const MENU_TEXT_MAX = 17;
+const MENU_TEXT_MAX = 18;
 const no_comment_list = [
     /^[ 　]*[>＞]*[ 　]*ｷﾀ[ 　]*━+[ 　]*\(ﾟ∀ﾟ\)[ 　]*━+[ 　]*[\!！]+[ 　]*$/,"",
     /^[ 　]*[>＞]*[ 　]*本文無し[ 　]*$/,"",
