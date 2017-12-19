@@ -1,4 +1,9 @@
-const MENU_TEXT_MAX = 12;
+const MENU_TEXT_MAX = 17;
+const no_comment_list = [
+    /^[ 　]*[>＞]*[ 　]*ｷﾀ[ 　]*━+[ 　]*\(ﾟ∀ﾟ\)[ 　]*━+[ 　]*[\!！]+[ 　]*$/,"",
+    /^[ 　]*[>＞]*[ 　]*本文無し[ 　]*$/,"",
+    /^[ 　]*[>＞]*[ 　]*そうだね[ 　]*$/,"dec_71",
+];
 
 let mcx = 0;
 let mcy = 0;
@@ -8,6 +13,11 @@ let show_quote = true;
 let show_quotemove = true;
 let show_copy = true;
 let show_copymove = true;
+let res_filename = false;
+let res_number = false;
+let serverName = document.domain.match(/^[^.]+/);
+let pathName = location.pathname.match(/[^/]+/);
+let serverFullPath = serverName + "_" + pathName;
 
 class QuoteMenu {
     constructor() {
@@ -154,6 +164,53 @@ function getResponseText() {
     }
 }
 
+function getResponseNo() {
+    let pointed = document.elementFromPoint(mcx, mcy);
+    let thre_rtd = "";
+
+    for (let elem = pointed; elem; elem = elem.parentElement) {
+        if (elem.className == "rtd" || elem.className == "thre") {
+            thre_rtd = elem;
+            break;
+        }
+    }
+
+    if (thre_rtd) {
+        for (let node = thre_rtd.firstChild; node; node = node.nextSibling) {
+            if (node.nodeType == Node.TEXT_NODE) {
+                let matches = node.nodeValue.match(/(No\.[0-9]+)/);
+                if (matches) {
+                    return matches[1];
+                }
+            }
+        }
+        return "";
+    } else {
+        return "";
+    }
+}
+
+function getResponseFilename() {
+    let pointed = document.elementFromPoint(mcx, mcy);
+    let anchor = "";
+
+    for (let elem = pointed; elem; elem = elem.parentElement) {
+        if (elem.tagName == "A") {
+            anchor = elem;
+            break;
+        }
+    }
+
+    if (anchor) {
+        let matches = anchor.href.match(/([0-9]+\.[0-9A-Za-z]+)$/);
+        if (matches) {
+            return matches[1];
+        }
+    } else {
+        return "";
+    }
+}
+
 // 何故か必要
 function onMouseMove(e) {
     mcx = e.clientX;
@@ -184,6 +241,28 @@ function onContextMenu() {
 
     if (sel.length == 0) {
         sel = getResponseText();
+        if (sel.length) {
+            //レス本文先頭のcharCodeが173(softHyphen)のときは本文無しとする（不可視のため）
+            if (sel.charCodeAt(0) == 173) {
+                sel = "";
+            }
+            if (res_number) {
+                for (let i = 0; i < no_comment_list.length; i = i+2) {
+                    let no_comment_matches = no_comment_list[i].test(sel);
+                    let board_matches = (serverFullPath == no_comment_list[i+1] || !no_comment_list[i+1]);
+                    if (no_comment_matches && board_matches) {
+                    sel = getResponseNo();
+//                  console.log("res.js : res_num = " + sel);
+                    break;
+                    }
+                }
+            }
+        }
+    }
+
+    if (sel.length == 0 && res_filename) {
+        sel = getResponseFilename();
+//      console.log("res.js : filename = " + sel);
     }
 
     if (sel.length == 0) {
@@ -221,6 +300,8 @@ function onSettingGot(result) {
     show_quotemove = safeGetValue(result.show_quotemove, true);
     show_copy = safeGetValue(result.show_copy, true);
     show_copymove = safeGetValue(result.show_copymove, true);
+    res_filename = safeGetValue(result.res_filename, false);
+    res_number = safeGetValue(result.res_number, false);
 
     main();
 }
