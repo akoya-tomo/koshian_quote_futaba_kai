@@ -1,0 +1,32 @@
+Manifest-Version: 1.0
+
+Name: manifest.json
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: oZshHcHOYZAraCjUp7bYZA==
+SHA1-Digest: VzgunIFvEraC0jslg2bI+vrHH0A=
+
+Name: options.html
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: thwkynVBvX7GAPktFcvJQg==
+SHA1-Digest: q4E6AZ81KKWfgHkIb+ZJRxaH4Ks=
+
+Name: options.js
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: bhd4ykz2vH2YrQvT1Bb0jw==
+SHA1-Digest: kYbIN9NwEKadUbbKMMkhbY2ZMH8=
+
+Name: res.js
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: TObT2jbGil9iEebHUxk2Lw==
+SHA1-Digest: QvaNoyYOAsEsZCdVpUAtHkBgII0=
+
+Name: style.css
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: e4fj6zACMl+07DiQxaOGOQ==
+SHA1-Digest: hpWJfteY/IxKmkW/i14Qzqhv6i0=
+
+Name: icons/icon-48.png
+Digest-Algorithms: MD5 SHA1
+MD5-Digest: lIxMIfe8JIGMgrGkOX4Jlw==
+SHA1-Digest: 2vQ38Xe3zbdlpuAigV2lFKGcynE=
+
