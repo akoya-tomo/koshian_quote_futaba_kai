@@ -2,6 +2,8 @@
 このアドオンは[Pachira](https://addons.mozilla.org/ja/firefox/user/anonymous-a0bba9187b568f98732d22d51c5955a6/)氏の[KOSHIAN 引用メニュー](https://addons.mozilla.org/ja/firefox/addon/koshian-quote-futaba/)アドオンを改変したものです  
 「画像ファイル名を引用する」オプションと「本文無しのときレスNo.を引用する」オプションをオリジナル版に追加しています  
 
+※他のKOSHIANアドオン改変版は[こちら](https://github.com/akoya-tomo/futaba_auto_reloader_K/wiki)の一覧からどうぞ
+
 ## 機能
 * オリジナルの機能（KOSHIAN 引用メニュー）
   - ふたば☆ちゃんねるのレス送信モード画面でコンテキストメニューからレス本文を返信フォームへ引用できるようにします
@@ -19,6 +21,8 @@
 * WebMのサムネの上で右クリックすると映像が再生されます  
   再生したくないときはWebMファイルのリンクの上で右クリックしてください  
 * 変更したオプションの設定がスレ画面で反映されない時は一度スレをリロードしてください  
+* オリジナル版とは別アドオンなので設定は初期値に戻ります  
+  再度設定をお願い致します  
 
 ## 更新履歴
 
