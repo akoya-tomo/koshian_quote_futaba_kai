@@ -199,6 +199,12 @@ function getResponseFilename() {
     //futaba lightboxのポップアップでは引用メニューを無効
     }else if (pointed.parentElement.tagName == "A" && pointed.className != "fancybox-image") {
         anchor = pointed.parentElement;
+    //WebM再生画面でのaタグ検索
+    }else if (pointed.tagName == "VIDEO") {
+        let elem = pointed.parentElement.nextElementSibling;
+        if (elem.tagName == "A") {
+            anchor = elem;
+        }
     }
 
     if (anchor) {
