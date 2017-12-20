@@ -1,0 +1,35 @@
+{
+    "manifest_version":2,
+    "name":"KOSHIAN 引用メニュー 改",
+
+    "version":"1.0.0",
+
+    "description":"引用メニューを表示します",
+
+    "icons":{
+        "48":"icons/icon-48.png"
+    },
+
+    "content_scripts":[
+        {
+            "matches":["*://*.2chan.net/*"],
+            "exclude_matches":["*://*.2chan.net/*/src/*"],
+            "js":["res.js"],
+            "css":["style.css"]
+        }
+    ],
+
+    "options_ui":{
+        "page":"options.html"
+    },
+
+    "permissions":[
+        "storage"
+    ],
+
+    "applications": {
+        "gecko": {
+            "id": "{A3B61A1A-E4C1-11E7-B853-22ED1C573ADE}"
+        }
+    }
+}
