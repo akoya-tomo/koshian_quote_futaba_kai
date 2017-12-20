@@ -194,11 +194,11 @@ function getResponseFilename() {
     let pointed = document.elementFromPoint(mcx, mcy);
     let anchor = "";
 
-    for (let elem = pointed; elem; elem = elem.parentElement) {
-        if (elem.tagName == "A") {
-            anchor = elem;
-            break;
-        }
+    if (pointed.tagName == "A") {
+        anchor = pointed;
+    //futaba lightboxのポップアップでは引用メニューを無効
+    }else if (pointed.parentElement.tagName == "A" && pointed.className != "fancybox-image") {
+        anchor = pointed.parentElement;
     }
 
     if (anchor) {
