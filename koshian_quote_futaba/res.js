@@ -3,6 +3,7 @@ const no_comment_list = [
     /^[ 　]*[>＞]*[ 　]*ｷﾀ[ 　]*━+[ 　]*\(ﾟ∀ﾟ\)[ 　]*━+[ 　]*[\!！]+[ 　]*$/,"",
     /^[ 　]*[>＞]*[ 　]*本文無し[ 　]*$/,"",
 //  /^[ 　]*[>＞]*[ 　]*そうだね[ 　]*$/,"dec_71",
+    /^[\u000a\u00a0\u00ad\u2002\u200c\u2029\u3000\u8204]+$/,"",
 ];
 
 let mcx = 0;
@@ -196,10 +197,10 @@ function getResponseFilename() {
 
     if (pointed.tagName == "A") {
         anchor = pointed;
-    //futaba lightboxのポップアップでは引用メニューを無効
+    // futaba lightboxのポップアップでは引用メニューを無効
     }else if (pointed.parentElement.tagName == "A" && pointed.className != "fancybox-image") {
         anchor = pointed.parentElement;
-    //WebM再生画面でのaタグ検索
+    // WebM再生画面でのaタグ検索
     }else if (pointed.tagName == "VIDEO") {
         let elem = pointed.parentElement.nextElementSibling;
         if (elem.tagName == "A") {
@@ -248,18 +249,15 @@ function onContextMenu() {
     if (sel.length == 0) {
         sel = getResponseText();
         if (sel.length) {
-            //レス本文先頭のcharCodeが173(softHyphen)のときは本文無しとする（不可視のため）
-            if (sel.charCodeAt(0) == 173) {
-                sel = "";
-            }
+            //dispCharCode(sel);
             if (res_number) {
                 for (let i = 0; i < no_comment_list.length; i = i+2) {
                     let no_comment_matches = no_comment_list[i].test(sel);
                     let board_matches = (serverFullPath == no_comment_list[i+1] || !no_comment_list[i+1]);
                     if (no_comment_matches && board_matches) {
-                    sel = getResponseNo();
-//                  console.log("res.js : res_num = " + sel);
-                    break;
+                        sel = getResponseNo();
+                        //console.log("res.js : res_num = " + sel);
+                        break;
                     }
                 }
             }
@@ -268,7 +266,12 @@ function onContextMenu() {
 
     if (sel.length == 0 && res_filename) {
         sel = getResponseFilename();
-//      console.log("res.js : filename = " + sel);
+        //console.log("res.js : filename = " + sel);
+    }
+
+    if (sel.length == 0 && res_number) {
+        sel = getResponseNo();
+        //console.log("res.js : res_num = " + sel);
     }
 
     if (sel.length == 0) {
@@ -276,6 +279,12 @@ function onContextMenu() {
     }
 
     quote_menu.show(sel);
+
+    function dispCharCode(str) {
+        for (let i =0; i < str.length; i++) {
+            console.log("res.js: str[" + i + "] = 0x" + ("0000" + str.charCodeAt(i).toString(16).toUpperCase()).substr(-4));
+        }
+    }
 }
 
 let quote_menu = null;
