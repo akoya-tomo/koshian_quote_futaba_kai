@@ -1,5 +1,5 @@
 ## KOSHIAN 引用メニュー 改
-このアドオンは[Pachira](https://addons.mozilla.org/ja/firefox/user/anonymous-a0bba9187b568f98732d22d51c5955a6/)氏の[KOSHIAN 引用メニュー](https://addons.mozilla.org/ja/firefox/addon/koshian-quote-futaba/)アドオンを改変したものです。  
+このFirefoxアドオンは[Pachira](https://addons.mozilla.org/ja/firefox/user/anonymous-a0bba9187b568f98732d22d51c5955a6/)氏の[KOSHIAN 引用メニュー](https://addons.mozilla.org/ja/firefox/addon/koshian-quote-futaba/)アドオンを改変したものです。  
 「画像ファイル名を引用する」オプションと「本文無しのときレスNo.を引用する」オプションをオリジナル版に追加しています。  
 
 ※このアドオンはWebExtensionアドオン対応のFirefox専用となります。  
@@ -15,7 +15,9 @@
     本文無し（ｷﾀ━━━(ﾟ∀ﾟ)━━━!!など含む）のときに右クリックするとレスNo.を引用できます。
 
 ## インストール
-[GitHub](https://github.com/akoya-tomo/koshian_quote_futaba_kai/releases/download/v1.0.1/koshian_quote_futaba_kai-1.0.1-an.fx.xpi)
+[GitHub](https://github.com/akoya-tomo/koshian_quote_futaba_kai/releases/download/v1.0.1/koshian_quote_futaba_kai-1.0.1-an.fx.xpi)  
+
+※「接続エラーのため、アドオンをダウンロードできませんでした。」と表示されてインストール出来ない時はリンクを右クリックしてxpiファイルをダウンロードし、メニューのツール→アドオン（またはCtrl+Shift+A）で表示されたアドオンマネージャーのページにxpiファイルをドラッグ＆ドロップして下さい。  
 
 ## 注意事項
 * このアドオンはWebExtensionアドオン対応のFirefox専用です。  
