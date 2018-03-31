@@ -1,9 +1,9 @@
 ## KOSHIAN 引用メニュー 改
-このFirefoxアドオンは[Pachira](https://addons.mozilla.org/ja/firefox/user/anonymous-a0bba9187b568f98732d22d51c5955a6/)氏の[KOSHIAN 引用メニュー](https://addons.mozilla.org/ja/firefox/addon/koshian-quote-futaba/)アドオンを改変したものです。  
+このFirefoxアドオンはふたば☆ちゃんねるでコンテキストメニューに引用メニューを追加する[Pachira](https://addons.mozilla.org/ja/firefox/user/anonymous-a0bba9187b568f98732d22d51c5955a6/)氏の[KOSHIAN 引用メニュー](https://addons.mozilla.org/ja/firefox/addon/koshian-quote-futaba/)アドオンを改変したものです。  
 「画像ファイル名を引用する」オプションと「本文無しのときレスNo.を引用する」オプションをオリジナル版に追加しています。  
 
 ※このアドオンはWebExtensionアドオン対応のFirefox専用となります。  
-※他のKOSHIANアドオン改変版やUserscriptは[こちら](https://github.com/akoya-tomo/futaba_auto_reloader_K/wiki/)の一覧からどうぞ。  
+※他のこしあんアドオン改変版やUserscriptは[こちら](https://github.com/akoya-tomo/futaba_auto_reloader_K/wiki/)の一覧からどうぞ。  
 
 ## 機能
 * オリジナルの機能（KOSHIAN 引用メニュー）
@@ -15,7 +15,7 @@
     本文無し（ｷﾀ━━━(ﾟ∀ﾟ)━━━!!など含む）のときに右クリックするとレスNo.を引用できます。
 
 ## インストール
-[GitHub](https://github.com/akoya-tomo/koshian_quote_futaba_kai/releases/download/v1.0.1/koshian_quote_futaba_kai-1.0.1-an.fx.xpi)  
+[GitHub](https://github.com/akoya-tomo/koshian_quote_futaba_kai/releases/download/v1.0.2/koshian_quote_futaba_kai-1.0.2-an.fx.xpi)  
 
 ※「接続エラーのため、アドオンをダウンロードできませんでした。」と表示されてインストール出来ない時はリンクを右クリックしてxpiファイルをダウンロードし、メニューのツール→アドオン（またはCtrl+Shift+A）で表示されたアドオンマネージャーのページにxpiファイルをドラッグ＆ドロップして下さい。  
 
@@ -30,6 +30,8 @@
   再生したくないときはWebMファイルのリンクの上で右クリックしてください。  
 
 ## 更新履歴
+* v1.0.2 2018-03-31
+  - アドオンの自動更新を有効化
 * v1.0.1 2018-01-23
   - 本文無しの判定を修正
 * v1.0.0 2017-12-20
