@@ -2,7 +2,7 @@
     "manifest_version":2,
     "name":"KOSHIAN 引用メニュー 改",
 
-    "version":"1.0.1",
+    "version":"1.0.2",
 
     "description":"引用メニューを表示します",
 
@@ -29,7 +29,8 @@
 
     "applications": {
         "gecko": {
-            "id": "{A3B61A1A-E4C1-11E7-B853-22ED1C573ADE}"
+            "id": "{A3B61A1A-E4C1-11E7-B853-22ED1C573ADE}",
+            "update_url": "https://raw.githubusercontent.com/akoya-tomo/koshian_quote_futaba_kai/master/updates.json"
         }
     }
 }
