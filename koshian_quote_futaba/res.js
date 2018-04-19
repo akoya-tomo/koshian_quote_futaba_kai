@@ -151,6 +151,9 @@ function getResponseText() {
     let pointed = document.elementFromPoint(mcx, mcy);
 
     for (let elem = pointed; elem; elem = elem.parentElement) {
+        if (elem.classList.contains("KOSHIAN_response")) {
+            break;
+        }
         if (elem.tagName == "BLOCKQUOTE") {
             return elem.innerText;
         }
