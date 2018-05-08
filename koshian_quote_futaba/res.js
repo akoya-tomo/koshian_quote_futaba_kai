@@ -86,15 +86,14 @@ class QuoteMenu {
         this.selection = text;
         if (show_idip) {
             this.idip = getResponseIdIp();
+            if (this.idip) {
+                this.menu.idipMenu.hidden = false;
+            } else {
+                this.menu.idipMenu.hidden = true;
+            }
         }
         if (show_number) {
             this.number = getResponseNo();
-        }
-
-        if (this.idip) {
-            this.menu.idipMenu.hidden = false;
-        } else {
-            this.menu.idipMenu.hidden = true;
         }
 
         let cw = document.documentElement.clientWidth;

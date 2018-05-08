@@ -17,8 +17,8 @@ function saveOptions() {
 }
 
 function setCurrentChoice(result) {
-  document.getElementById("show_idip").checked = safeGetValue(result.show_quote, false);
-  document.getElementById("show_number").checked = safeGetValue(result.show_quote, false);
+  document.getElementById("show_idip").checked = safeGetValue(result.show_idip, false);
+  document.getElementById("show_number").checked = safeGetValue(result.show_number, false);
   document.getElementById("show_quote").checked = safeGetValue(result.show_quote, true);
   document.getElementById("show_quotemove").checked = safeGetValue(result.show_quotemove, true);
   document.getElementById("show_copy").checked = safeGetValue(result.show_copy, true);
