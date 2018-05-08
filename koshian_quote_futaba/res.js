@@ -275,14 +275,21 @@ function getResponseIdIp() {
             if (node.tagName == "BLOCKQUOTE") {
                 return "";
             } else if (node.nodeType == Node.TEXT_NODE) {
-                let matches = node.nodeValue.match(/I[DP]:\S{8}/);
+                let matches = node.nodeValue.match(/(ID:\S{8}|IP:\w+[.:]\w+\.\*\(.+\))/);
                 if (matches) {
                     return matches[0];
                 }
             } else if (node.tagName == "A") {
-                let matches = node.name.match(/I[DP]:\S{8}/);
-                if (matches) {
-                    return matches[0];
+                let matches1 = node.name.match(/I[DP]:\S{8}/);
+                if (matches1) {
+                    node = node.nextSibling;
+                    if (node.nodeType == Node.TEXT_NODE) {
+                        let matches2 = node.nodeValue.match(/.*\)/);
+                        if (matches2) {
+                            return matches1[0]+matches2[0];
+                        }
+                    }
+                    return matches1[0];
                 }
             }
         }
