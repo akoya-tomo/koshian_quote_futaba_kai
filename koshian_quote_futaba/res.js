@@ -5,6 +5,8 @@ const no_comment_list = [
 //  /^[ 　]*[>＞]*[ 　]*そうだね[ 　]*$/,"dec_71",
     /^[\u000a\u00a0\u00ad\u2002\u200c\u2029\u3000\u8204]+$/,"",
 ];
+const menu_offset_x = 1;    // 引用メニューの左へのオフセット量 (px)
+const menu_offset_y = 1;    // 引用メニューの上へのオフセット量 (px)
 
 let mcx = 0;
 let mcy = 0;
@@ -98,8 +100,8 @@ class QuoteMenu {
 
         this.menu_text.textContent = text.length > MENU_TEXT_MAX ? text.slice(0, MENU_TEXT_MAX) + `...` : text;
 
-        this.menu.style.right = `${cw - mcx}px`;
-        this.menu.style.bottom = `${ch - mcy}px`;
+        this.menu.style.right = `${cw - mcx + menu_offset_x}px`;
+        this.menu.style.bottom = `${ch - mcy + menu_offset_y}px`;
         this.menu.hidden = false;
     }
 
