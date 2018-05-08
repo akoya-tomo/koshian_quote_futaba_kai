@@ -1,15 +1,21 @@
 const MENU_TEXT_MAX = 18;
-const no_comment_list = [
-    /^[ 　]*[>＞]*[ 　]*ｷﾀ[ 　]*━+[ 　]*\(ﾟ∀ﾟ\)[ 　]*━+[ 　]*[\!！]+[ 　]*$/,"",
-    /^[ 　]*[>＞]*[ 　]*本文無し[ 　]*$/,"",
-//  /^[ 　]*[>＞]*[ 　]*そうだね[ 　]*$/,"dec_71",
-    /^[\u000a\u00a0\u00ad\u2002\u200c\u2029\u3000\u8204]+$/,"",
+const no_text_list = [
+    // 本文無しリスト
+    // [本文無し正規表現パターン, サーバー名 + "_" + パス名（空文字で全板）]
+    [/^[ 　]*[>＞]*[ 　]*ｷﾀ[ 　]*━+[ 　]*\(ﾟ∀ﾟ\)[ 　]*━+[ 　]*[!！]+[ 　]*$/, ""],
+    [/^[ 　]*[>＞]*[ 　]*本文無し[ 　]*$/, ""],
+    // [/^[ 　]*[>＞]*[ 　]*そうだね[ 　]*$/, "dec_71"],
+    [/^[\u000a\u00a0\u00ad\u2002\u200c\u2029\u3000\u8204]+$/, ""],
 ];
+const menu_offset_x = 1;    // 引用メニューの左へのオフセット量 (px)
+const menu_offset_y = 1;    // 引用メニューの上へのオフセット量 (px)
 
 let mcx = 0;
 let mcy = 0;
 let mbutton = 0;
 let textarea = null;
+let show_idip = false;
+let show_number = false;
 let show_quote = true;
 let show_quotemove = true;
 let show_copy = true;
@@ -23,6 +29,8 @@ let serverFullPath = serverName + "_" + pathName;
 class QuoteMenu {
     constructor() {
         this.selection = "";
+        this.idip = "";
+        this.number = "";
 
         this.menu = document.createElement("div");
         this.menu.className = "KOSHIAN_QuoteMenu";
@@ -33,6 +41,20 @@ class QuoteMenu {
 
         this.menu.appendChild(this.menu_text);
 
+        if (show_idip) {
+            this.menu.idipMenu = this.createMenuItem("ID･IP", () => {
+                this.selection = this.idip;
+                this.quote();
+            });
+
+            this.menu.appendChild(this.menu.idipMenu);
+        }
+        if (show_number) {
+            this.menu.appendChild(this.createMenuItem("No.", () => {
+                this.selection = this.number;
+                this.quote();
+            }));
+        }
         if (show_quote) {
             this.menu.appendChild(this.createMenuItem("引用", () => {
                 this.quote();
@@ -62,14 +84,26 @@ class QuoteMenu {
 
     show(text) {
         this.selection = text;
+        if (show_idip) {
+            this.idip = getResponseIdIp();
+        }
+        if (show_number) {
+            this.number = getResponseNo();
+        }
+
+        if (this.idip) {
+            this.menu.idipMenu.hidden = false;
+        } else {
+            this.menu.idipMenu.hidden = true;
+        }
 
         let cw = document.documentElement.clientWidth;
         let ch = document.documentElement.clientHeight;
 
         this.menu_text.textContent = text.length > MENU_TEXT_MAX ? text.slice(0, MENU_TEXT_MAX) + `...` : text;
 
-        this.menu.style.right = `${cw - mcx}px`;
-        this.menu.style.bottom = `${ch - mcy}px`;
+        this.menu.style.right = `${cw - mcx + menu_offset_x}px`;
+        this.menu.style.bottom = `${ch - mcy + menu_offset_y}px`;
         this.menu.hidden = false;
     }
 
@@ -131,7 +165,7 @@ class QuoteMenu {
     }
 
     createMenuItem(text, callback) {
-        let item = document.createElement("div")
+        let item = document.createElement("div");
         item.className = "KOSHIAN_QuoteMenuItem";
         item.textContent = text;
         item.onclick = () => {
@@ -173,7 +207,8 @@ function getResponseNo() {
     let thre_rtd = "";
 
     for (let elem = pointed; elem; elem = elem.parentElement) {
-        if (elem.className == "rtd" || elem.className == "thre") {
+        let class_name = elem.className;
+        if (class_name == "rtd" || class_name == "thre" || class_name == "KOSHIAN_response") {
             thre_rtd = elem;
             break;
         }
@@ -181,10 +216,12 @@ function getResponseNo() {
 
     if (thre_rtd) {
         for (let node = thre_rtd.firstChild; node; node = node.nextSibling) {
-            if (node.nodeType == Node.TEXT_NODE) {
-                let matches = node.nodeValue.match(/(No\.[0-9]+)/);
+            if (node.tagName == "BLOCKQUOTE") {
+                return "";
+            } else if (node.nodeType == Node.TEXT_NODE) {
+                let matches = node.nodeValue.match(/No\.[0-9]+/);
                 if (matches) {
-                    return matches[1];
+                    return matches[0];
                 }
             }
         }
@@ -201,10 +238,10 @@ function getResponseFilename() {
     if (pointed.tagName == "A") {
         anchor = pointed;
     // futaba lightboxのポップアップでは引用メニューを無効
-    }else if (pointed.parentElement.tagName == "A" && pointed.className != "fancybox-image") {
+    } else if (pointed.parentElement.tagName == "A" && pointed.className != "fancybox-image") {
         anchor = pointed.parentElement;
     // WebM再生画面でのaタグ検索
-    }else if (pointed.tagName == "VIDEO") {
+    } else if (pointed.tagName == "VIDEO") {
         let elem = pointed.parentElement.nextElementSibling;
         if (elem.tagName == "A") {
             anchor = elem;
@@ -212,10 +249,51 @@ function getResponseFilename() {
     }
 
     if (anchor) {
-        let matches = anchor.href.match(/([0-9]+\.[0-9A-Za-z]+)$/);
+        let matches = anchor.href.match(/[0-9]+\.[0-9A-Za-z]+$/);
         if (matches) {
-            return matches[1];
+            return matches[0];
         }
+    } else {
+        return "";
+    }
+}
+
+function getResponseIdIp() {
+    let pointed = document.elementFromPoint(mcx, mcy);
+    let thre_rtd = "";
+
+    for (let elem = pointed; elem; elem = elem.parentElement) {
+        let class_name = elem.className;
+        if (class_name == "rtd" || class_name == "thre" || class_name == "KOSHIAN_response") {
+            thre_rtd = elem;
+            break;
+        }
+    }
+
+    if (thre_rtd) {
+        for (let node = thre_rtd.firstChild; node; node = node.nextSibling) {
+            if (node.tagName == "BLOCKQUOTE") {
+                return "";
+            } else if (node.nodeType == Node.TEXT_NODE) {
+                let matches = node.nodeValue.match(/(ID:\S{8}|IP:\w+[.:]\w+\.\*\(.+\))/);
+                if (matches) {
+                    return matches[0];
+                }
+            } else if (node.tagName == "A") {
+                let matches1 = node.name.match(/I[DP]:\S{8}/);
+                if (matches1) {
+                    node = node.nextSibling;
+                    if (node.nodeType == Node.TEXT_NODE) {
+                        let matches2 = node.nodeValue.match(/.*\)/);
+                        if (matches2) {
+                            return matches1[0]+matches2[0];
+                        }
+                    }
+                    return matches1[0];
+                }
+            }
+        }
+        return "";
     } else {
         return "";
     }
@@ -254,12 +332,12 @@ function onContextMenu() {
         if (sel.length) {
             //dispCharCode(sel);
             if (res_number) {
-                for (let i = 0; i < no_comment_list.length; i = i+2) {
-                    let no_comment_matches = no_comment_list[i].test(sel);
-                    let board_matches = (serverFullPath == no_comment_list[i+1] || !no_comment_list[i+1]);
-                    if (no_comment_matches && board_matches) {
+                for (let i = 0; i < no_text_list.length; i++) {
+                    let no_text = no_text_list[i][0].test(sel);
+                    let board_matched = (serverFullPath == no_text_list[i][1] || !no_text_list[i][1]);
+                    if (no_text && board_matched) {
                         sel = getResponseNo();
-                        //console.log("res.js : res_num = " + sel);
+                        //console.log("res.js res_num: " + sel);
                         break;
                     }
                 }
@@ -269,12 +347,12 @@ function onContextMenu() {
 
     if (sel.length == 0 && res_filename) {
         sel = getResponseFilename();
-        //console.log("res.js : filename = " + sel);
+        //console.log("res.js filename: " + sel);
     }
 
     if (sel.length == 0 && res_number) {
         sel = getResponseNo();
-        //console.log("res.js : res_num = " + sel);
+        //console.log("res.js res_num: " + sel);
     }
 
     if (sel.length == 0) {
@@ -314,6 +392,8 @@ function onError() {
 }
 
 function onSettingGot(result) {
+    show_idip = safeGetValue(result.show_idip, false);
+    show_number = safeGetValue(result.show_number, false);
     show_quote = safeGetValue(result.show_quote, true);
     show_quotemove = safeGetValue(result.show_quotemove, true);
     show_copy = safeGetValue(result.show_copy, true);
