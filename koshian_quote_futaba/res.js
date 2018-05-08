@@ -1,9 +1,11 @@
 const MENU_TEXT_MAX = 18;
-const no_comment_list = [
-    /^[ 　]*[>＞]*[ 　]*ｷﾀ[ 　]*━+[ 　]*\(ﾟ∀ﾟ\)[ 　]*━+[ 　]*[\!！]+[ 　]*$/,"",
-    /^[ 　]*[>＞]*[ 　]*本文無し[ 　]*$/,"",
-//  /^[ 　]*[>＞]*[ 　]*そうだね[ 　]*$/,"dec_71",
-    /^[\u000a\u00a0\u00ad\u2002\u200c\u2029\u3000\u8204]+$/,"",
+const no_text_list = [
+    // 本文無しリスト
+    // [本文無し正規表現パターン, サーバー名 + "_" + パス名（空文字で全板）]
+    [/^[ 　]*[>＞]*[ 　]*ｷﾀ[ 　]*━+[ 　]*\(ﾟ∀ﾟ\)[ 　]*━+[ 　]*[!！]+[ 　]*$/, ""],
+    [/^[ 　]*[>＞]*[ 　]*本文無し[ 　]*$/, ""],
+    // [/^[ 　]*[>＞]*[ 　]*そうだね[ 　]*$/, "dec_71"],
+    [/^[\u000a\u00a0\u00ad\u2002\u200c\u2029\u3000\u8204]+$/, ""],
 ];
 const menu_offset_x = 1;    // 引用メニューの左へのオフセット量 (px)
 const menu_offset_y = 1;    // 引用メニューの上へのオフセット量 (px)
@@ -163,7 +165,7 @@ class QuoteMenu {
     }
 
     createMenuItem(text, callback) {
-        let item = document.createElement("div")
+        let item = document.createElement("div");
         item.className = "KOSHIAN_QuoteMenuItem";
         item.textContent = text;
         item.onclick = () => {
@@ -205,7 +207,8 @@ function getResponseNo() {
     let thre_rtd = "";
 
     for (let elem = pointed; elem; elem = elem.parentElement) {
-        if (elem.className == "rtd" || elem.className == "thre" || elem.className == "KOSHIAN_response") {
+        let class_name = elem.className;
+        if (class_name == "rtd" || class_name == "thre" || class_name == "KOSHIAN_response") {
             thre_rtd = elem;
             break;
         }
@@ -213,10 +216,12 @@ function getResponseNo() {
 
     if (thre_rtd) {
         for (let node = thre_rtd.firstChild; node; node = node.nextSibling) {
-            if (node.nodeType == Node.TEXT_NODE) {
-                let matches = node.nodeValue.match(/(No\.[0-9]+)/);
+            if (node.tagName == "BLOCKQUOTE") {
+                return "";
+            } else if (node.nodeType == Node.TEXT_NODE) {
+                let matches = node.nodeValue.match(/No\.[0-9]+/);
                 if (matches) {
-                    return matches[1];
+                    return matches[0];
                 }
             }
         }
@@ -233,10 +238,10 @@ function getResponseFilename() {
     if (pointed.tagName == "A") {
         anchor = pointed;
     // futaba lightboxのポップアップでは引用メニューを無効
-    }else if (pointed.parentElement.tagName == "A" && pointed.className != "fancybox-image") {
+    } else if (pointed.parentElement.tagName == "A" && pointed.className != "fancybox-image") {
         anchor = pointed.parentElement;
     // WebM再生画面でのaタグ検索
-    }else if (pointed.tagName == "VIDEO") {
+    } else if (pointed.tagName == "VIDEO") {
         let elem = pointed.parentElement.nextElementSibling;
         if (elem.tagName == "A") {
             anchor = elem;
@@ -244,9 +249,9 @@ function getResponseFilename() {
     }
 
     if (anchor) {
-        let matches = anchor.href.match(/([0-9]+\.[0-9A-Za-z]+)$/);
+        let matches = anchor.href.match(/[0-9]+\.[0-9A-Za-z]+$/);
         if (matches) {
-            return matches[1];
+            return matches[0];
         }
     } else {
         return "";
@@ -258,7 +263,8 @@ function getResponseIdIp() {
     let thre_rtd = "";
 
     for (let elem = pointed; elem; elem = elem.parentElement) {
-        if (elem.className == "rtd" || elem.className == "thre" || elem.className == "KOSHIAN_response") {
+        let class_name = elem.className;
+        if (class_name == "rtd" || class_name == "thre" || class_name == "KOSHIAN_response") {
             thre_rtd = elem;
             break;
         }
@@ -319,12 +325,12 @@ function onContextMenu() {
         if (sel.length) {
             //dispCharCode(sel);
             if (res_number) {
-                for (let i = 0; i < no_comment_list.length; i = i+2) {
-                    let no_comment_matches = no_comment_list[i].test(sel);
-                    let board_matches = (serverFullPath == no_comment_list[i+1] || !no_comment_list[i+1]);
-                    if (no_comment_matches && board_matches) {
+                for (let i = 0; i < no_text_list.length; i++) {
+                    let no_text = no_text_list[i][0].test(sel);
+                    let board_matched = (serverFullPath == no_text_list[i][1] || !no_text_list[i][1]);
+                    if (no_text && board_matched) {
                         sel = getResponseNo();
-                        //console.log("res.js : res_num = " + sel);
+                        //console.log("res.js res_num: " + sel);
                         break;
                     }
                 }
@@ -334,12 +340,12 @@ function onContextMenu() {
 
     if (sel.length == 0 && res_filename) {
         sel = getResponseFilename();
-        //console.log("res.js : filename = " + sel);
+        //console.log("res.js filename: " + sel);
     }
 
     if (sel.length == 0 && res_number) {
         sel = getResponseNo();
-        //console.log("res.js : res_num = " + sel);
+        //console.log("res.js res_num: " + sel);
     }
 
     if (sel.length == 0) {
