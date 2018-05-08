@@ -203,7 +203,7 @@ function getResponseNo() {
     let thre_rtd = "";
 
     for (let elem = pointed; elem; elem = elem.parentElement) {
-        if (elem.className == "rtd" || elem.className == "thre") {
+        if (elem.className == "rtd" || elem.className == "thre" || elem.className == "KOSHIAN_response") {
             thre_rtd = elem;
             break;
         }
