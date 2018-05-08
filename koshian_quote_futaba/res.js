@@ -10,6 +10,8 @@ let mcx = 0;
 let mcy = 0;
 let mbutton = 0;
 let textarea = null;
+let show_idip = false;
+let show_number = false;
 let show_quote = true;
 let show_quotemove = true;
 let show_copy = true;
@@ -23,6 +25,8 @@ let serverFullPath = serverName + "_" + pathName;
 class QuoteMenu {
     constructor() {
         this.selection = "";
+        this.idip = "";
+        this.number = "";
 
         this.menu = document.createElement("div");
         this.menu.className = "KOSHIAN_QuoteMenu";
@@ -33,6 +37,20 @@ class QuoteMenu {
 
         this.menu.appendChild(this.menu_text);
 
+        if (show_idip) {
+            this.menu.idipMenu = this.createMenuItem("ID･IP", () => {
+                this.selection = this.idip;
+                this.quote();
+            });
+
+            this.menu.appendChild(this.menu.idipMenu);
+        }
+        if (show_number) {
+            this.menu.appendChild(this.createMenuItem("No.", () => {
+                this.selection = this.number;
+                this.quote();
+            }));
+        }
         if (show_quote) {
             this.menu.appendChild(this.createMenuItem("引用", () => {
                 this.quote();
@@ -62,6 +80,18 @@ class QuoteMenu {
 
     show(text) {
         this.selection = text;
+        if (show_idip) {
+            this.idip = getResponseIdIp();
+        }
+        if (show_number) {
+            this.number = getResponseNo();
+        }
+
+        if (this.idip) {
+            this.menu.idipMenu.hidden = false;
+        } else {
+            this.menu.idipMenu.hidden = true;
+        }
 
         let cw = document.documentElement.clientWidth;
         let ch = document.documentElement.clientHeight;
@@ -221,6 +251,39 @@ function getResponseFilename() {
     }
 }
 
+function getResponseIdIp() {
+    let pointed = document.elementFromPoint(mcx, mcy);
+    let thre_rtd = "";
+
+    for (let elem = pointed; elem; elem = elem.parentElement) {
+        if (elem.className == "rtd" || elem.className == "thre" || elem.className == "KOSHIAN_response") {
+            thre_rtd = elem;
+            break;
+        }
+    }
+
+    if (thre_rtd) {
+        for (let node = thre_rtd.firstChild; node; node = node.nextSibling) {
+            if (node.tagName == "BLOCKQUOTE") {
+                return "";
+            } else if (node.nodeType == Node.TEXT_NODE) {
+                let matches = node.nodeValue.match(/I[DP]:\S{8}/);
+                if (matches) {
+                    return matches[0];
+                }
+            } else if (node.tagName == "A") {
+                let matches = node.name.match(/I[DP]:\S{8}/);
+                if (matches) {
+                    return matches[0];
+                }
+            }
+        }
+        return "";
+    } else {
+        return "";
+    }
+}
+
 // 何故か必要
 function onMouseMove(e) {
     mcx = e.clientX;
@@ -314,6 +377,8 @@ function onError() {
 }
 
 function onSettingGot(result) {
+    show_idip = safeGetValue(result.show_idip, false);
+    show_number = safeGetValue(result.show_number, false);
     show_quote = safeGetValue(result.show_quote, true);
     show_quotemove = safeGetValue(result.show_quotemove, true);
     show_copy = safeGetValue(result.show_copy, true);
