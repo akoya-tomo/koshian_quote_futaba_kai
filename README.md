@@ -20,7 +20,7 @@ ID・IP・レスNo.や画像ファイル名を引用するオプションをオ�
     引用メニューに"No."を追加します。レスNo.を引用することができます。  
 
 ## インストール
-[GitHub](https://github.com/akoya-tomo/koshian_quote_futaba_kai/releases/download/v1.1.0/koshian_quote_futaba_kai-1.1.0-an.fx.xpi)  
+[GitHub](https://github.com/akoya-tomo/koshian_quote_futaba_kai/releases/download/v1.1.1/koshian_quote_futaba_kai-1.1.1-an.fx.xpi)  
 
 ※「接続エラーのため、アドオンをダウンロードできませんでした。」と表示されてインストール出来ない時はリンクを右クリックしてxpiファイルをダウンロードし、メニューのツール→アドオン（またはCtrl+Shift+A）で表示されたアドオンマネージャーのページにxpiファイルをドラッグ＆ドロップして下さい。  
 
@@ -37,6 +37,8 @@ ID・IP・レスNo.や画像ファイル名を引用するオプションをオ�
 * 変更したオプションの設定が反映されないときは一度スレを更新してください。  
 
 ## 更新履歴
+* v1.1.1 2018-05-08
+  - 引用メニューの動作不具合修正
 * v1.1.0 2018-05-08
   - 「"ID･IP"を表示」「"No."を表示」オプション追加
   - 引用ポップアップしたレスのレスNo.が引用できない不具合修正
