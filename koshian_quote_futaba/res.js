@@ -130,6 +130,7 @@ class QuoteMenu {
         }
 
         this.addToTextarea(text);
+        document.dispatchEvent(new CustomEvent("KOSHIAN_quote"));
     }
 
     copy() {
