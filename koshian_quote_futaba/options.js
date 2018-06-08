@@ -12,7 +12,8 @@ function saveOptions() {
     show_copy:document.getElementById("show_copy").checked,
     show_copymove:document.getElementById("show_copymove").checked,
     res_filename:document.getElementById("res_filename").checked,
-    res_number:document.getElementById("res_number").checked
+    res_number:document.getElementById("res_number").checked,
+    quote_only_unquoted:document.getElementById("quote_only_unquoted").checked
   });
 }
 
@@ -25,6 +26,7 @@ function setCurrentChoice(result) {
   document.getElementById("show_copymove").checked = safeGetValue(result.show_copymove, true);
   document.getElementById("res_filename").checked = safeGetValue(result.res_filename, false);
   document.getElementById("res_number").checked = safeGetValue(result.res_number, false);
+  document.getElementById("quote_only_unquoted").checked = safeGetValue(result.quote_only_unquoted, false);
 
   for(let i = 0,inputs = document.getElementsByTagName("input"); i < inputs.length; ++i){
     inputs[i].onclick = saveOptions;
