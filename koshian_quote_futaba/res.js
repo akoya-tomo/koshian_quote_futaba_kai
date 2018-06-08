@@ -22,6 +22,7 @@ let show_copy = true;
 let show_copymove = true;
 let res_filename = false;
 let res_number = false;
+let quote_only_unquoted = false;
 let serverName = document.domain.match(/^[^.]+/);
 let pathName = location.pathname.match(/[^/]+/);
 let serverFullPath = serverName + "_" + pathName;
@@ -188,14 +189,36 @@ function getResponseText() {
             break;
         }
         if (elem.tagName == "BLOCKQUOTE") {
-            return elem.innerText;
+            if (quote_only_unquoted) {
+                let text = "";
+                for(let i = 0, lines = elem.innerText.split(/\n|\r\n/); i < lines.length; ++i){
+                    if (lines[i].indexOf(">") !== 0) {
+                        text += `${lines[i]}\n`;
+                    }
+                }
+                text = text.slice(0,-2);
+                return text;
+            } else {
+                return elem.innerText;
+            }
         }
     }
 
     let blockquote = pointed.getElementsByTagName("blockquote")[0];
 
     if (blockquote) {
-        return blockquote.innerText;
+        if (quote_only_unquoted) {
+            let text = "";
+            for(let i = 0, lines = blockquote.innerText.split(/\n|\r\n/); i < lines.length; ++i){
+                if (lines[i].indexOf(">") !== 0) {
+                    text += `${lines[i]}\n`;
+                }
+            }
+            text = text.slice(0,-2);
+            return text;
+        } else {
+            return blockquote.innerText;
+        }
     } else {
         return "";
     }
@@ -399,6 +422,7 @@ function onSettingGot(result) {
     show_copymove = safeGetValue(result.show_copymove, true);
     res_filename = safeGetValue(result.res_filename, false);
     res_number = safeGetValue(result.res_number, false);
+    quote_only_unquoted = safeGetValue(result.quote_only_unquoted, false);
 
     main();
 }
