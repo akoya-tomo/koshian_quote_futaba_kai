@@ -23,6 +23,7 @@ let show_copymove = true;
 let res_filename = false;
 let res_number = false;
 let quote_only_unquoted = false;
+let quickquote_number = false;
 let serverName = document.domain.match(/^[^.]+/);
 let pathName = location.pathname.match(/[^/]+/);
 let serverFullPath = serverName + "_" + pathName;
@@ -184,9 +185,12 @@ class QuoteMenu {
 
 function getResponseText() {
     let pointed = document.elementFromPoint(mcx, mcy);
+    let thre_rtd = null;
 
     for (let elem = pointed; elem; elem = elem.parentElement) {
-        if (elem.classList.contains("KOSHIAN_response")) {
+        let class_name = elem.className;
+        if (class_name == "rtd" || class_name == "thre" || class_name == "KOSHIAN_response") {
+            thre_rtd = elem;
             break;
         }
         if (elem.tagName == "BLOCKQUOTE") {
@@ -197,15 +201,20 @@ function getResponseText() {
                         text += `${lines[i]}\n`;
                     }
                 }
-                text = text.slice(0,-2);
-                return text;
-            } else {
-                return elem.innerText;
+                if(text.length){
+                    text = text.slice(0,-1);
+                    return text;
+                } else if (res_number) {
+                    return "";
+                }
             }
+            return elem.innerText;
         }
     }
 
-    let blockquote = pointed.getElementsByTagName("blockquote")[0];
+    if (!thre_rtd) return "";
+
+    let blockquote = thre_rtd.getElementsByTagName("blockquote")[0];
 
     if (blockquote) {
         if (quote_only_unquoted) {
@@ -215,29 +224,49 @@ function getResponseText() {
                     text += `${lines[i]}\n`;
                 }
             }
-            text = text.slice(0,-2);
-            return text;
-        } else {
-            return blockquote.innerText;
+            if(text.length){
+                text = text.slice(0,-1);
+                return text;
+            } else if (res_number) {
+                return "";
+            }
         }
-    } else {
-        return "";
+        return blockquote.innerText;
     }
+    return "";
 }
 
 function getResponseNo() {
     let pointed = document.elementFromPoint(mcx, mcy);
-    let thre_rtd = "";
+    let thre = false;
+    let thre_rtd = null;
 
     for (let elem = pointed; elem; elem = elem.parentElement) {
         let class_name = elem.className;
-        if (class_name == "rtd" || class_name == "thre" || class_name == "KOSHIAN_response") {
+        if (class_name == "rtd" || class_name == "KOSHIAN_response") {
             thre_rtd = elem;
+            break;
+        } else if (class_name == "thre") {
+            thre_rtd = elem;
+            thre = true;
             break;
         }
     }
 
     if (thre_rtd) {
+        if (quickquote_number) {
+            if (thre) {
+                let number_button = document.querySelector(".thre>.KOSHIAN_NumberButton");
+                if (number_button) {
+                    return number_button.textContent;
+                }
+            } else {
+                let number_buttons = thre_rtd.getElementsByClassName("KOSHIAN_NumberButton");
+                if (number_buttons.length) {
+                    return number_buttons[0].textContent;
+                }
+            }
+        }
         for (let node = thre_rtd.firstChild; node; node = node.nextSibling) {
             if (node.tagName == "BLOCKQUOTE") {
                 return "";
@@ -248,10 +277,8 @@ function getResponseNo() {
                 }
             }
         }
-        return "";
-    } else {
-        return "";
     }
+    return "";
 }
 
 function getResponseFilename() {
@@ -276,9 +303,8 @@ function getResponseFilename() {
         if (matches) {
             return matches[0];
         }
-    } else {
-        return "";
     }
+    return "";
 }
 
 function getResponseIdIp() {
@@ -347,8 +373,15 @@ function onBlur() {
     quote_menu.hide(true);
 }
 
-function onContextMenu() {
-    let sel = window.getSelection().toString();
+function getSelectedText() {
+    let sel ="";
+
+    if (res_filename) {
+        sel = getResponseFilename();
+        if (sel) return sel;
+    }
+
+    sel = window.getSelection().toString();
 
     if (sel.length == 0) {
         sel = getResponseText();
@@ -368,27 +401,90 @@ function onContextMenu() {
         }
     }
 
-    if (sel.length == 0 && res_filename) {
-        sel = getResponseFilename();
-        //console.log("res.js filename: " + sel);
-    }
-
     if (sel.length == 0 && res_number) {
         sel = getResponseNo();
         //console.log("res.js res_num: " + sel);
     }
 
-    if (sel.length == 0) {
-        return;
-    }
-
-    quote_menu.show(sel);
+    return sel;
 
     function dispCharCode(str) {
         for (let i =0; i < str.length; i++) {
             console.log("res.js: str[" + i + "] = 0x" + ("0000" + str.charCodeAt(i).toString(16).toUpperCase()).substr(-4));
         }
     }
+}
+
+function onContextMenu() {
+    let sel = getSelectedText();
+
+    if (sel.length == 0) {
+        return;
+    }
+
+    quote_menu.show(sel);
+}
+
+function quickQuote() {
+    let sel = getSelectedText();
+
+    if (sel.length == 0) {
+        return;
+    }
+
+    quote_menu.selection = sel;
+    quote_menu.quote();
+}
+
+function putNumberButton(block) {
+    //既存のNo.ボタンがあればonclick再設定
+    let number_buttons = block.getElementsByClassName("KOSHIAN_NumberButton");
+    if (number_buttons.length){
+        number_buttons[0].onclick = quickQuote;
+        return;
+    }
+
+    for (let node = block.firstChild; node; node = node.nextSibling) {
+        if (node.tagName == "BLOCKQUOTE") {
+            return;
+        } else if (node.nodeType == Node.TEXT_NODE) {
+            let matches = node.nodeValue.match(/(.*)(No\.[0-9]+)(.*)/);
+            if (matches) {
+                let text1 = document.createTextNode(matches[1]);
+                let text2 = document.createTextNode(matches[3]);
+                let btn = document.createElement("a");
+                btn.className = "KOSHIAN_NumberButton";
+                btn.href="javascript:void(0)";
+                btn.textContent = matches[2];
+                btn.onclick = quickQuote;
+                block.insertBefore(text1, node);
+                block.insertBefore(btn, node);
+                block.insertBefore(text2, node);
+                block.removeChild(node);
+                return;
+            }
+        }
+    }
+    return;
+}
+
+let last_process_num = 0;
+
+function process(beg = 0){
+    let responses = document.getElementsByClassName("rtd");
+    let respones_num = responses.length;
+
+    if(beg >= respones_num){
+        return;
+    }
+
+    let end = responses.length;
+
+    for(let i = beg; i < end; ++i){
+        putNumberButton(responses[i]);
+    }
+
+    last_process_num = end;
 }
 
 let quote_menu = null;
@@ -405,6 +501,20 @@ function main() {
     document.addEventListener("mouseup", onMouseUp);
     document.addEventListener("mousedown", onMouseDown);
     document.addEventListener("blur", onBlur);
+
+    if (quickquote_number) {
+        let thre = document.querySelector(".thre");
+        if (thre) {
+            putNumberButton(thre);
+        }
+
+        process();
+
+        document.addEventListener("KOSHIAN_reload", (e) => {
+            process(last_process_num);
+        });
+    }
+
 }
 
 function safeGetValue(value, default_value) {
@@ -424,6 +534,7 @@ function onSettingGot(result) {
     res_filename = safeGetValue(result.res_filename, false);
     res_number = safeGetValue(result.res_number, false);
     quote_only_unquoted = safeGetValue(result.quote_only_unquoted, false);
+    quickquote_number = safeGetValue(result.quickquote_number, false);
 
     main();
 }
