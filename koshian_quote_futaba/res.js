@@ -202,7 +202,7 @@ function getResponseText() {
                     }
                 }
                 if(text.length){
-                    text = text.slice(0,-2);
+                    text = text.slice(0,-1);
                     return text;
                 } else if (res_number) {
                     return "";
@@ -225,7 +225,7 @@ function getResponseText() {
                 }
             }
             if(text.length){
-                text = text.slice(0,-2);
+                text = text.slice(0,-1);
                 return text;
             } else if (res_number) {
                 return "";
