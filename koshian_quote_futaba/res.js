@@ -373,7 +373,7 @@ function onBlur() {
     quote_menu.hide(true);
 }
 
-function getSelectedText() {
+function getSelectedText(use_select) {
     let sel ="";
 
     if (res_filename) {
@@ -381,7 +381,7 @@ function getSelectedText() {
         if (sel) return sel;
     }
 
-    sel = window.getSelection().toString();
+    if (use_select) sel = window.getSelection().toString();
 
     if (sel.length == 0) {
         sel = getResponseText();
@@ -409,6 +409,7 @@ function getSelectedText() {
     return sel;
 
     function dispCharCode(str) {
+        //strのキャラクターコードを表示（開発用）
         for (let i =0; i < str.length; i++) {
             console.log("res.js: str[" + i + "] = 0x" + ("0000" + str.charCodeAt(i).toString(16).toUpperCase()).substr(-4));
         }
@@ -416,7 +417,7 @@ function getSelectedText() {
 }
 
 function onContextMenu() {
-    let sel = getSelectedText();
+    let sel = getSelectedText(true);
 
     if (sel.length == 0) {
         return;
@@ -437,14 +438,15 @@ function quickQuote() {
 }
 
 function putNumberButton(block) {
-    //既存のNo.ボタンがあればonclick再設定
     let number_buttons = block.getElementsByClassName("KOSHIAN_NumberButton");
     if (number_buttons.length){
+        //既存のNo.ボタンがあればonclick再設定
         number_buttons[0].onclick = quickQuote;
         return;
     }
 
     for (let node = block.firstChild; node; node = node.nextSibling) {
+        //blockの子要素を検索
         if (node.tagName == "BLOCKQUOTE") {
             return;
         } else if (node.nodeType == Node.TEXT_NODE) {
@@ -465,26 +467,70 @@ function putNumberButton(block) {
             }
         }
     }
-    return;
+}
+
+function quickputNumberButton(del) {
+    for (let node = del.previousSibling; node; node = node.previousSibling) {
+        //delの前方を検索（通常はdelの一つ前のnodeがNo.）
+        if (node.tagName == "A" && node.className == "KOSHIAN_NumberButton") {
+            //既存のNo.ボタンがあればonclick再設定
+            node.onclick = quickQuote;
+            return;
+        } else if (node.nodeType == Node.TEXT_NODE) {
+            let matches = node.nodeValue.match(/(.*)(No\.[0-9]+)(.*)/);
+            if (matches) {
+                let block = node.parentNode;
+                let text1 = document.createTextNode(matches[1]);
+                let text2 = document.createTextNode(matches[3]);
+                let btn = document.createElement("a");
+                btn.className = "KOSHIAN_NumberButton";
+                btn.href="javascript:void(0)";
+                btn.textContent = matches[2];
+                btn.onclick = quickQuote;
+                block.insertBefore(text1, node);
+                block.insertBefore(btn, node);
+                block.insertBefore(text2, node);
+                block.removeChild(node);
+                return;
+            }
+        }
+    }
+}
+
+function putPopupNumberButton() {
+    let popupNumbers = document.getElementsByClassName("KOSHIAN_PopupNumber");
+    for (let popupNumber of popupNumbers) {
+        popupNumber.onclick = quickQuote;
+        popupNumber.className = "KOSHIAN_NumberButton";
+    }
 }
 
 let last_process_num = 0;
 
 function process(beg = 0){
-    let responses = document.getElementsByClassName("rtd");
-    let respones_num = responses.length;
+    //let start_time = Date.now();  //処理時間計測開始（開発用）
 
-    if(beg >= respones_num){
-        return;
-    }
+    let dels = document.getElementsByClassName("del");
+    let end;
 
-    let end = responses.length;
-
-    for(let i = beg; i < end; ++i){
-        putNumberButton(responses[i]);
+    if (dels.length) {
+        end = dels.length - 1; 
+        if (beg >= end) return;
+        for (let i = beg; i < end; ++i) {
+            quickputNumberButton(dels[i+1]);
+        }
+    } else {
+        let responses = document.getElementsByClassName("rtd");
+        end = responses.length;
+        if (beg >= end) return;
+        for (let i = beg; i < end; ++i) {
+            putNumberButton(responses[i]);
+        }
     }
 
     last_process_num = end;
+
+    //console.log("KOSHIAN_quote/res.js process() time: " + (Date.now() - start_time) + "msec");    //処理時間表示
 }
 
 let quote_menu = null;
@@ -503,9 +549,14 @@ function main() {
     document.addEventListener("blur", onBlur);
 
     if (quickquote_number) {
-        let thre = document.querySelector(".thre");
-        if (thre) {
-            putNumberButton(thre);
+        let del = document.querySelector(".del");
+        if (del) {
+            quickputNumberButton(del);
+        } else {
+            let thre = document.querySelector(".thre");
+            if (thre) {
+                putNumberButton(thre);
+            }
         }
 
         process();
@@ -515,6 +566,9 @@ function main() {
         });
     }
 
+    document.addEventListener("KOSHIAN_popupQuote", (e) => {
+        putPopupNumberButton();
+    });
 }
 
 function safeGetValue(value, default_value) {
