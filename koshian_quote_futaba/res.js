@@ -465,26 +465,63 @@ function putNumberButton(block) {
             }
         }
     }
-    return;
+}
+
+function quickputNumberButton(del) {
+    for (let node = del.previousSibling; node; node = node.previousSibling) {
+        //delの前方を検索（通常はdelの一つ前のnodeがNo.）
+        if (node.tagName == "A" && node.className == "KOSHIAN_NumberButton") {
+            //既存のNo.ボタンがあればonclick再設定
+            node.onclick = quickQuote;
+            return;
+        } else if (node.nodeType == Node.TEXT_NODE) {
+            let matches = node.nodeValue.match(/(.*)(No\.[0-9]+)(.*)/);
+            if (matches) {
+                let block = node.parentNode;
+                let text1 = document.createTextNode(matches[1]);
+                let text2 = document.createTextNode(matches[3]);
+                let btn = document.createElement("a");
+                btn.className = "KOSHIAN_NumberButton";
+                btn.href="javascript:void(0)";
+                btn.textContent = matches[2];
+                btn.onclick = quickQuote;
+                block.insertBefore(text1, node);
+                block.insertBefore(btn, node);
+                block.insertBefore(text2, node);
+                block.removeChild(node);
+                return;
+            }
+        }
+    }
+
 }
 
 let last_process_num = 0;
 
 function process(beg = 0){
-    let responses = document.getElementsByClassName("rtd");
-    let respones_num = responses.length;
+    //let start_time = Date.now();  //処理時間計測開始（開発用）
 
-    if(beg >= respones_num){
-        return;
-    }
+    let dels = document.getElementsByClassName("del");
+    let end;
 
-    let end = responses.length;
-
-    for(let i = beg; i < end; ++i){
-        putNumberButton(responses[i]);
+    if (dels.length) {
+        end = dels.length - 1; 
+        if (beg >= end) return;
+        for (let i = beg; i < end; ++i) {
+            quickputNumberButton(dels[i+1]);
+        }
+    } else {
+        let responses = document.getElementsByClassName("rtd");
+        end = responses.length;
+        if (beg >= end) return;
+        for (let i = beg; i < end; ++i) {
+            putNumberButton(responses[i]);
+        }
     }
 
     last_process_num = end;
+
+    //console.log("KOSHIAN_quote/res.js process() time: " + (Date.now() - start_time) + "msec");    //処理時間表示
 }
 
 let quote_menu = null;
@@ -503,9 +540,14 @@ function main() {
     document.addEventListener("blur", onBlur);
 
     if (quickquote_number) {
-        let thre = document.querySelector(".thre");
-        if (thre) {
-            putNumberButton(thre);
+        let del = document.querySelector(".del");
+        if (del) {
+            quickputNumberButton(del);
+        } else {
+            let thre = document.querySelector(".thre");
+            if (thre) {
+                putNumberButton(thre);
+            }
         }
 
         process();
