@@ -409,6 +409,7 @@ function getSelectedText(use_select) {
     return sel;
 
     function dispCharCode(str) {
+        //strのキャラクターコードを表示（開発用）
         for (let i =0; i < str.length; i++) {
             console.log("res.js: str[" + i + "] = 0x" + ("0000" + str.charCodeAt(i).toString(16).toUpperCase()).substr(-4));
         }
@@ -437,14 +438,15 @@ function quickQuote() {
 }
 
 function putNumberButton(block) {
-    //既存のNo.ボタンがあればonclick再設定
     let number_buttons = block.getElementsByClassName("KOSHIAN_NumberButton");
     if (number_buttons.length){
+        //既存のNo.ボタンがあればonclick再設定
         number_buttons[0].onclick = quickQuote;
         return;
     }
 
     for (let node = block.firstChild; node; node = node.nextSibling) {
+        //blockの子要素を検索
         if (node.tagName == "BLOCKQUOTE") {
             return;
         } else if (node.nodeType == Node.TEXT_NODE) {
