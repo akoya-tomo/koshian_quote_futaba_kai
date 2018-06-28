@@ -1,9 +1,9 @@
-## KOSHIAN 引用メニュー 改
-このFirefoxアドオンはふたば☆ちゃんねるでコンテキストメニューに引用メニューを追加する[Pachira](https://addons.mozilla.org/ja/firefox/user/anonymous-a0bba9187b568f98732d22d51c5955a6/)氏の[KOSHIAN 引用メニュー](https://addons.mozilla.org/ja/firefox/addon/koshian-quote-futaba/)アドオンを改変したものです。  
-ID・IP・レスNo.や画像ファイル名を引用するオプションをオリジナル版に追加しています。  
+## <sub><img src="koshian_quote_futaba/icons/icon-48.png"></sub> KOSHIAN 引用メニュー 改
+このFirefoxアドオンはふたば☆ちゃんねるでコンテキストメニューに引用メニューを追加する[Pachira](https://addons.mozilla.org/ja/firefox/user/anonymous-a0bba9187b568f98732d22d51c5955a6/)氏の[KOSHIAN 引用メニュー](https://addons.mozilla.org/ja/firefox/addon/koshian-quote-futaba/)の非公式改変版です。  
+ID･IP・レスNo.や画像ファイル名を引用するオプションをオリジナル版に追加しています。  
 
 ※このアドオンはWebExtensionアドオン対応のFirefox専用となります。  
-※他のこしあんアドオン改変版やUserscriptは[こちら](https://github.com/akoya-tomo/futaba_auto_reloader_K/wiki/)の一覧からどうぞ。  
+※他のKOSHIAN改変版などのふたば支援ツール一覧は[こちら](https://github.com/akoya-tomo/futaba_auto_reloader_K/wiki/)。  
 
 ## 機能
 * オリジナルの機能（KOSHIAN 引用メニュー）
@@ -20,37 +20,33 @@ ID・IP・レスNo.や画像ファイル名を引用するオプションをオ�
     引用メニューに"No."を追加します。レスNo.を引用することができます。  
   - 「非引用部分のみ引用する」オプション（デフォルト：無効）  
     レス文章の引用されていない部分のみを引用することができます。  
-  - \(New\) 「No.をクリックで引用する」オプション（デフォルト：無効）  
+  - 「No.をクリックで引用する」オプション（デフォルト：無効）  
     No.をクリックでレス文章を引用することができます。  
 
 ## インストール
-[GitHub](https://github.com/akoya-tomo/koshian_quote_futaba_kai/releases/download/v1.3.0/koshian_quote_futaba_kai-1.3.0-an.fx.xpi)  
+**GitHub**  
+[![インストールボタン](images/install_button.png "クリックでアドオンをインストール")](https://github.com/akoya-tomo/koshian_quote_futaba_kai/releases/download/v1.4.0/koshian_quote_futaba_kai-1.4.0-an.fx.xpi)  
 
 ※「接続エラーのため、アドオンをダウンロードできませんでした。」と表示されてインストール出来ない時はリンクを右クリックしてxpiファイルをダウンロードし、メニューのツール→アドオン（またはCtrl+Shift+A）で表示されたアドオンマネージャーのページにxpiファイルをドラッグ＆ドロップして下さい。  
 
 ## 追加機能の補足
 * レス本文の文字列を選択して右クリックすると選択文字列が優先されて引用されます。
-* WebMのサムネの上で右クリックすると映像が再生されます。  
-  再生したくないときはWebMファイルのリンクの上で右クリックしてください。  
-* \(New\) 引用ポップアップ上ではNo.をクリックでの引用は現在機能しません。  
-  引用ポップアップ上では右クリックの引用メニューをご利用ください。  
-  （今後のアップデートで実装予定です） 
-* \(New\) レス本文を一行だけ文字列選択した状態でNo.をクリックすると文字列選択が解除されてしまいます。  
-  文字列選択の引用は右クリックの引用メニューをご利用ください。  
-  （レス本文を複数行選択したときはNo.をクリックでも正常に引用されます）
+* 動画のサムネの上で右クリックすると動画が再生されます。  
+  再生したくないときは動画ファイルのリンクの上で右クリックしてください。  
+* \(New\) 「No.をクリックで引用する」では選択文字列の引用はできません。  
+  選択文字列の引用は右クリックの引用メニューをご利用ください。  
 
 ## 注意事項
-* このアドオンはWebExtensionアドオン対応のFirefox専用です。  
 * 本アドオンを有効化したときはオリジナル版を無効化または削除して下さい。  
 * オリジナル版とは別アドオンなので設定は初期値に戻ります。  
   再度設定をお願い致します。  
 * オプションの設定を変更したときは開いているスレを一度更新することで設定が反映されます。  
-* [KOSHIAN 引用をポップアップで表示 改](https://github.com/akoya-tomo/koshian_popup_quote_kai/) v1.5以上と組み合わせてご使用ください。  
-
-## 今後の予定
-* 引用ポップアップ上での「No.をクリックで引用する」機能の実装  
+* [KOSHIAN 引用をポップアップで表示 改](https://github.com/akoya-tomo/koshian_popup_quote_kai/) **v1.6以上**と組み合わせてご使用ください。  
 
 ## 更新履歴
+* v1.4.0 2018-06-28
+  - 引用ポップアップ内で「No.をクリックで引用する」が動作するように修正
+  - 「No.をクリックで引用する」機能の動作の高速化
 * v1.3.0 2018-06-12
   - 「No.をクリックで引用する」オプション追加
   - 「非引用部分のみ引用する」オプション有効時に最後の1文字が引用されない不具合修正
