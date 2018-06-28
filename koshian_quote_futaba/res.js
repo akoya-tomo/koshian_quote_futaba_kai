@@ -373,7 +373,7 @@ function onBlur() {
     quote_menu.hide(true);
 }
 
-function getSelectedText() {
+function getSelectedText(use_select) {
     let sel ="";
 
     if (res_filename) {
@@ -381,7 +381,7 @@ function getSelectedText() {
         if (sel) return sel;
     }
 
-    sel = window.getSelection().toString();
+    if (use_select) sel = window.getSelection().toString();
 
     if (sel.length == 0) {
         sel = getResponseText();
@@ -416,7 +416,7 @@ function getSelectedText() {
 }
 
 function onContextMenu() {
-    let sel = getSelectedText();
+    let sel = getSelectedText(true);
 
     if (sel.length == 0) {
         return;
@@ -493,7 +493,14 @@ function quickputNumberButton(del) {
             }
         }
     }
+}
 
+function putPopupNumberButton() {
+    let popupNumbers = document.getElementsByClassName("KOSHIAN_PopupNumber");
+    for (let popupNumber of popupNumbers) {
+        popupNumber.onclick = quickQuote;
+        popupNumber.className = "KOSHIAN_NumberButton";
+    }
 }
 
 let last_process_num = 0;
@@ -557,6 +564,9 @@ function main() {
         });
     }
 
+    document.addEventListener("KOSHIAN_popupQuote", (e) => {
+        putPopupNumberButton();
+    });
 }
 
 function safeGetValue(value, default_value) {
