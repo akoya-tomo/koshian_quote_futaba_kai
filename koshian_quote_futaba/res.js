@@ -472,6 +472,7 @@ function putNumberButton(block) {
                 btn.href="javascript:void(0)";
                 btn.textContent = matches[2];
                 btn.onclick = quickQuote;
+                btn.style.color = "inherit";
                 block.insertBefore(text1, node);
                 block.insertBefore(btn, node);
                 block.insertBefore(text2, node);
@@ -500,6 +501,7 @@ function quickputNumberButton(del) {
                 btn.href="javascript:void(0)";
                 btn.textContent = matches[2];
                 btn.onclick = quickQuote;
+                btn.style.color = "inherit";
                 block.insertBefore(text1, node);
                 block.insertBefore(btn, node);
                 block.insertBefore(text2, node);
