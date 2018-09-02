@@ -199,9 +199,13 @@ function getResponseText() {
             break;
         }
         if (elem.tagName == "BLOCKQUOTE") {
+            let inner_text = elem.innerText;
+            if (elem.getElementsByClassName("KOSHIAN_PreviewSwitch").length) {
+                inner_text = inner_text.replace(/\[見る\]|\[隠す\](\n|\r\n)?/g, "");
+            }
             if (quote_only_unquoted) {
                 let text = "";
-                for(let i = 0, lines = elem.innerText.split(/\n|\r\n/); i < lines.length; ++i){
+                for(let i = 0, lines = inner_text.split(/\n|\r\n/); i < lines.length; ++i){
                     if (lines[i].indexOf(">") !== 0) {
                         text += `${lines[i]}\n`;
                     }
@@ -213,7 +217,7 @@ function getResponseText() {
                     return "";
                 }
             }
-            return elem.innerText;
+            return inner_text;
         }
     }
 
@@ -222,9 +226,13 @@ function getResponseText() {
     let blockquote = thre_rtd.getElementsByTagName("blockquote")[0];
 
     if (blockquote) {
+        let inner_text = blockquote.innerText;
+        if (blockquote.getElementsByClassName("KOSHIAN_PreviewSwitch").length) {
+            inner_text = inner_text.replace(/\[見る\]|\[隠す\](\n|\r\n)?/g, "");
+        }
         if (quote_only_unquoted) {
             let text = "";
-            for(let i = 0, lines = blockquote.innerText.split(/\n|\r\n/); i < lines.length; ++i){
+            for(let i = 0, lines = inner_text.split(/\n|\r\n/); i < lines.length; ++i){
                 if (lines[i].indexOf(">") !== 0) {
                     text += `${lines[i]}\n`;
                 }
@@ -236,7 +244,7 @@ function getResponseText() {
                 return "";
             }
         }
-        return blockquote.innerText;
+        return inner_text;
     }
     return "";
 }
