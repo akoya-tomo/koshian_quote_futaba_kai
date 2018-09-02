@@ -2,9 +2,8 @@ const MENU_TEXT_MAX = 18;
 const no_text_list = [
     // 本文無しリスト
     // [本文無し正規表現パターン, サーバー名 + "_" + パス名（空文字で全板）]
-    [/^[ 　]*[>＞]*[ 　]*ｷﾀ[ 　]*━+[ 　]*\(ﾟ∀ﾟ\)[ 　]*━+[ 　]*[!！]+[ 　]*$/, ""],
-    [/^[ 　]*[>＞]*[ 　]*本文無し[ 　]*$/, ""],
-    // [/^[ 　]*[>＞]*[ 　]*そうだね[ 　]*$/, "dec_71"],
+    [/^[ 　]*[>＞]*[ 　]*ｷﾀ[ 　]*━+[ 　]*\(ﾟ∀ﾟ\)[ 　]*━+[ 　]*[!！]+[ 　]*$/, ""],  //eslint-disable-line no-irregular-whitespace
+    [/^[ 　]*[>＞]*[ 　]*本文無し[ 　]*$/, ""], //eslint-disable-line no-irregular-whitespace
     [/^[\u000a\u00a0\u00ad\u2002\u200c\u2029\u3000\u8204]+$/, ""],
 ];
 const menu_offset_x = 1;    // 引用メニューの左へのオフセット量 (px)
@@ -24,6 +23,7 @@ let res_filename = false;
 let res_number = false;
 let quote_only_unquoted = false;
 let quickquote_number = false;
+let delete_unnecessary_space = true;
 let serverName = document.domain.match(/^[^.]+/);
 let pathName = location.pathname.match(/[^/]+/);
 let serverFullPath = serverName + "_" + pathName;
@@ -127,6 +127,10 @@ class QuoteMenu {
     quote() {
         let text = "";
         for(let i = 0, lines = this.selection.split(/\n|\r\n/); i < lines.length; ++i){
+            if (lines[i]) {
+                if (delete_unnecessary_space) lines[i] = lines[i].replace(/^\s+/, "");
+                if (!lines[i]) continue;
+            }
             text += `>${lines[i]}\n`;
         }
 
@@ -194,9 +198,13 @@ function getResponseText() {
             break;
         }
         if (elem.tagName == "BLOCKQUOTE") {
+            let inner_text = elem.innerText;
+            if (elem.getElementsByClassName("KOSHIAN_PreviewSwitch").length) {
+                inner_text = inner_text.replace(/\[見る\]|\[隠す\](\n|\r\n)?/g, "");
+            }
             if (quote_only_unquoted) {
                 let text = "";
-                for(let i = 0, lines = elem.innerText.split(/\n|\r\n/); i < lines.length; ++i){
+                for(let i = 0, lines = inner_text.split(/\n|\r\n/); i < lines.length; ++i){
                     if (lines[i].indexOf(">") !== 0) {
                         text += `${lines[i]}\n`;
                     }
@@ -208,7 +216,7 @@ function getResponseText() {
                     return "";
                 }
             }
-            return elem.innerText;
+            return inner_text;
         }
     }
 
@@ -217,9 +225,13 @@ function getResponseText() {
     let blockquote = thre_rtd.getElementsByTagName("blockquote")[0];
 
     if (blockquote) {
+        let inner_text = blockquote.innerText;
+        if (blockquote.getElementsByClassName("KOSHIAN_PreviewSwitch").length) {
+            inner_text = inner_text.replace(/\[見る\]|\[隠す\](\n|\r\n)?/g, "");
+        }
         if (quote_only_unquoted) {
             let text = "";
-            for(let i = 0, lines = blockquote.innerText.split(/\n|\r\n/); i < lines.length; ++i){
+            for(let i = 0, lines = inner_text.split(/\n|\r\n/); i < lines.length; ++i){
                 if (lines[i].indexOf(">") !== 0) {
                     text += `${lines[i]}\n`;
                 }
@@ -231,7 +243,7 @@ function getResponseText() {
                 return "";
             }
         }
-        return blockquote.innerText;
+        return inner_text;
     }
     return "";
 }
@@ -299,9 +311,9 @@ function getResponseFilename() {
     }
 
     if (anchor) {
-        let matches = anchor.href.match(/[0-9]+\.[0-9A-Za-z]+$/);
+        let matches = anchor.href.match(/\/(([sf].?)*[0-9]+\.[0-9A-Za-z]+$)/);
         if (matches) {
-            return matches[0];
+            return matches[1];
         }
     }
     return "";
@@ -408,10 +420,10 @@ function getSelectedText(use_select) {
 
     return sel;
 
-    function dispCharCode(str) {
-        //strのキャラクターコードを表示（開発用）
+    function dispCharCode(str) {    //eslint-disable-line no-unused-vars
+        // strのキャラクターコードを表示（開発用）
         for (let i =0; i < str.length; i++) {
-            console.log("res.js: str[" + i + "] = 0x" + ("0000" + str.charCodeAt(i).toString(16).toUpperCase()).substr(-4));
+            console.log("res.js: str[" + i + "] = 0x" + ("0000" + str.charCodeAt(i).toString(16).toUpperCase()).substr(-4));    //eslint-disable-line no-console
         }
     }
 }
@@ -440,13 +452,13 @@ function quickQuote() {
 function putNumberButton(block) {
     let number_buttons = block.getElementsByClassName("KOSHIAN_NumberButton");
     if (number_buttons.length){
-        //既存のNo.ボタンがあればonclick再設定
+        // 既存のNo.ボタンがあればonclick再設定
         number_buttons[0].onclick = quickQuote;
         return;
     }
 
     for (let node = block.firstChild; node; node = node.nextSibling) {
-        //blockの子要素を検索
+        // blockの子要素を検索
         if (node.tagName == "BLOCKQUOTE") {
             return;
         } else if (node.nodeType == Node.TEXT_NODE) {
@@ -459,6 +471,7 @@ function putNumberButton(block) {
                 btn.href="javascript:void(0)";
                 btn.textContent = matches[2];
                 btn.onclick = quickQuote;
+                btn.style.color = "inherit";
                 block.insertBefore(text1, node);
                 block.insertBefore(btn, node);
                 block.insertBefore(text2, node);
@@ -471,9 +484,9 @@ function putNumberButton(block) {
 
 function quickputNumberButton(del) {
     for (let node = del.previousSibling; node; node = node.previousSibling) {
-        //delの前方を検索（通常はdelの一つ前のnodeがNo.）
+        // delの前方を検索（通常はdelの一つ前のnodeがNo.）
         if (node.tagName == "A" && node.className == "KOSHIAN_NumberButton") {
-            //既存のNo.ボタンがあればonclick再設定
+            // 既存のNo.ボタンがあればonclick再設定
             node.onclick = quickQuote;
             return;
         } else if (node.nodeType == Node.TEXT_NODE) {
@@ -487,6 +500,7 @@ function quickputNumberButton(del) {
                 btn.href="javascript:void(0)";
                 btn.textContent = matches[2];
                 btn.onclick = quickQuote;
+                btn.style.color = "inherit";
                 block.insertBefore(text1, node);
                 block.insertBefore(btn, node);
                 block.insertBefore(text2, node);
@@ -561,12 +575,12 @@ function main() {
 
         process();
 
-        document.addEventListener("KOSHIAN_reload", (e) => {
+        document.addEventListener("KOSHIAN_reload", () => {
             process(last_process_num);
         });
     }
 
-    document.addEventListener("KOSHIAN_popupQuote", (e) => {
+    document.addEventListener("KOSHIAN_popupQuote", () => {
         putPopupNumberButton();
     });
 }
@@ -589,6 +603,7 @@ function onSettingGot(result) {
     res_number = safeGetValue(result.res_number, false);
     quote_only_unquoted = safeGetValue(result.quote_only_unquoted, false);
     quickquote_number = safeGetValue(result.quickquote_number, false);
+    delete_unnecessary_space = safeGetValue(result.delete_unnecessary_space, true);
 
     main();
 }

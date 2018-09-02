@@ -1,3 +1,4 @@
+/* eslint indent: ["warn", 2] */
 
 function safeGetValue(value, default_value) {
   return value === undefined ? default_value : value;
@@ -14,7 +15,8 @@ function saveOptions() {
     res_filename:document.getElementById("res_filename").checked,
     res_number:document.getElementById("res_number").checked,
     quote_only_unquoted:document.getElementById("quote_only_unquoted").checked,
-    quickquote_number:document.getElementById("quickquote_number").checked
+    quickquote_number:document.getElementById("quickquote_number").checked,
+    delete_unnecessary_space:document.getElementById("delete_unnecessary_space").checked
   });
 }
 
@@ -29,13 +31,14 @@ function setCurrentChoice(result) {
   document.getElementById("res_number").checked = safeGetValue(result.res_number, false);
   document.getElementById("quote_only_unquoted").checked = safeGetValue(result.quote_only_unquoted, false);
   document.getElementById("quickquote_number").checked = safeGetValue(result.quickquote_number, false);
+  document.getElementById("delete_unnecessary_space").checked = safeGetValue(result.delete_unnecessary_space, true);
 
   for(let i = 0,inputs = document.getElementsByTagName("input"); i < inputs.length; ++i){
     inputs[i].onclick = saveOptions;
   }
 }
 
-function onError(error) {
+function onError(error) { //eslint-disable-line no-unused-vars
   //  console.log(`Error: ${error}`);
 }
 
