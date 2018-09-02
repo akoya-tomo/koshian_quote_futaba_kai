@@ -312,9 +312,9 @@ function getResponseFilename() {
     }
 
     if (anchor) {
-        let matches = anchor.href.match(/[0-9]+\.[0-9A-Za-z]+$/);
+        let matches = anchor.href.match(/\/(([sf].?)*[0-9]+\.[0-9A-Za-z]+$)/);
         if (matches) {
-            return matches[0];
+            return matches[1];
         }
     }
     return "";
