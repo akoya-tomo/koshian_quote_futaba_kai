@@ -1,3 +1,4 @@
+/* eslint indent: ["warn", 2] */
 
 function safeGetValue(value, default_value) {
   return value === undefined ? default_value : value;
@@ -37,7 +38,7 @@ function setCurrentChoice(result) {
   }
 }
 
-function onError(error) {
+function onError(error) { //eslint-disable-line no-unused-vars
   //  console.log(`Error: ${error}`);
 }
 

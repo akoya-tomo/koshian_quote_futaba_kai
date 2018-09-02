@@ -2,9 +2,8 @@ const MENU_TEXT_MAX = 18;
 const no_text_list = [
     // 本文無しリスト
     // [本文無し正規表現パターン, サーバー名 + "_" + パス名（空文字で全板）]
-    [/^[ 　]*[>＞]*[ 　]*ｷﾀ[ 　]*━+[ 　]*\(ﾟ∀ﾟ\)[ 　]*━+[ 　]*[!！]+[ 　]*$/, ""],
-    [/^[ 　]*[>＞]*[ 　]*本文無し[ 　]*$/, ""],
-    // [/^[ 　]*[>＞]*[ 　]*そうだね[ 　]*$/, "dec_71"],
+    [/^[ 　]*[>＞]*[ 　]*ｷﾀ[ 　]*━+[ 　]*\(ﾟ∀ﾟ\)[ 　]*━+[ 　]*[!！]+[ 　]*$/, ""],  //eslint-disable-line no-irregular-whitespace
+    [/^[ 　]*[>＞]*[ 　]*本文無し[ 　]*$/, ""], //eslint-disable-line no-irregular-whitespace
     [/^[\u000a\u00a0\u00ad\u2002\u200c\u2029\u3000\u8204]+$/, ""],
 ];
 const menu_offset_x = 1;    // 引用メニューの左へのオフセット量 (px)
@@ -421,10 +420,10 @@ function getSelectedText(use_select) {
 
     return sel;
 
-    function dispCharCode(str) {
-        //strのキャラクターコードを表示（開発用）
+    function dispCharCode(str) {    //eslint-disable-line no-unused-vars
+        // strのキャラクターコードを表示（開発用）
         for (let i =0; i < str.length; i++) {
-            console.log("res.js: str[" + i + "] = 0x" + ("0000" + str.charCodeAt(i).toString(16).toUpperCase()).substr(-4));
+            console.log("res.js: str[" + i + "] = 0x" + ("0000" + str.charCodeAt(i).toString(16).toUpperCase()).substr(-4));    //eslint-disable-line no-console
         }
     }
 }
@@ -453,13 +452,13 @@ function quickQuote() {
 function putNumberButton(block) {
     let number_buttons = block.getElementsByClassName("KOSHIAN_NumberButton");
     if (number_buttons.length){
-        //既存のNo.ボタンがあればonclick再設定
+        // 既存のNo.ボタンがあればonclick再設定
         number_buttons[0].onclick = quickQuote;
         return;
     }
 
     for (let node = block.firstChild; node; node = node.nextSibling) {
-        //blockの子要素を検索
+        // blockの子要素を検索
         if (node.tagName == "BLOCKQUOTE") {
             return;
         } else if (node.nodeType == Node.TEXT_NODE) {
@@ -485,9 +484,9 @@ function putNumberButton(block) {
 
 function quickputNumberButton(del) {
     for (let node = del.previousSibling; node; node = node.previousSibling) {
-        //delの前方を検索（通常はdelの一つ前のnodeがNo.）
+        // delの前方を検索（通常はdelの一つ前のnodeがNo.）
         if (node.tagName == "A" && node.className == "KOSHIAN_NumberButton") {
-            //既存のNo.ボタンがあればonclick再設定
+            // 既存のNo.ボタンがあればonclick再設定
             node.onclick = quickQuote;
             return;
         } else if (node.nodeType == Node.TEXT_NODE) {
@@ -576,12 +575,12 @@ function main() {
 
         process();
 
-        document.addEventListener("KOSHIAN_reload", (e) => {
+        document.addEventListener("KOSHIAN_reload", () => {
             process(last_process_num);
         });
     }
 
-    document.addEventListener("KOSHIAN_popupQuote", (e) => {
+    document.addEventListener("KOSHIAN_popupQuote", () => {
         putPopupNumberButton();
     });
 }
