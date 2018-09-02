@@ -24,6 +24,7 @@ let res_filename = false;
 let res_number = false;
 let quote_only_unquoted = false;
 let quickquote_number = false;
+let delete_unnecessary_space = true;
 let serverName = document.domain.match(/^[^.]+/);
 let pathName = location.pathname.match(/[^/]+/);
 let serverFullPath = serverName + "_" + pathName;
@@ -127,6 +128,10 @@ class QuoteMenu {
     quote() {
         let text = "";
         for(let i = 0, lines = this.selection.split(/\n|\r\n/); i < lines.length; ++i){
+            if (lines[i]) {
+                if (delete_unnecessary_space) lines[i] = lines[i].replace(/^\s+/, "");
+                if (!lines[i]) continue;
+            }
             text += `>${lines[i]}\n`;
         }
 
@@ -589,6 +594,7 @@ function onSettingGot(result) {
     res_number = safeGetValue(result.res_number, false);
     quote_only_unquoted = safeGetValue(result.quote_only_unquoted, false);
     quickquote_number = safeGetValue(result.quickquote_number, false);
+    delete_unnecessary_space = safeGetValue(result.delete_unnecessary_space, true);
 
     main();
 }
