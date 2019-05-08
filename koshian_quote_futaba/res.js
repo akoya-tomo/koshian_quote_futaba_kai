@@ -578,11 +578,38 @@ function main() {
         document.addEventListener("KOSHIAN_reload", () => {
             process(last_process_num);
         });
+
+        let contdisp = document.getElementById("contdisp");
+        if (contdisp) {
+            check2chanReload(contdisp);
+        }
     }
 
     document.addEventListener("KOSHIAN_popupQuote", () => {
         putPopupNumberButton();
     });
+
+    function check2chanReload(target) {
+        let status = "";
+        let reloading = false;
+        let config = { childList: true };
+        let observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (target.textContent == status) return;
+                status = target.textContent;
+                if (status == "・・・") {
+                    reloading = true;
+                } else
+                if (reloading && status.endsWith("頃消えます")) {
+                    process(last_process_num);
+                    reloading = false;
+                } else {
+                    reloading = false;
+                }
+            });
+        });
+        observer.observe(target, config);
+    }
 }
 
 function safeGetValue(value, default_value) {

@@ -22,12 +22,12 @@
     レス文章の引用されていない部分のみを引用することができます。  
   - 「No.をクリックで引用する」オプション（デフォルト：無効）  
     No.をクリックでレス文章を引用することができます。  
-  - ![\(New\)](images/new.png "New")「引用符と文章の間の空白を削除」オプション（デフォルト：有効）  
+  - 「引用符と文章の間の空白を削除」オプション（デフォルト：有効）  
     引用したときに引用符と文章の間に空白が挿入されたり、引用符だけの行が挿入されることがある環境で不要な挿入を抑止します。  
 
 ## インストール
 **GitHub**  
-[![インストールボタン](images/install_button.png "クリックでアドオンをインストール")](https://github.com/akoya-tomo/koshian_quote_futaba_kai/releases/download/v1.5.0/koshian_quote_futaba_kai-1.5.0-an+fx.xpi)  
+[![インストールボタン](images/install_button.png "クリックでアドオンをインストール")](https://github.com/akoya-tomo/koshian_quote_futaba_kai/releases/download/v1.6.0/koshian_quote_futaba_kai-1.6.0-fx.xpi)  
 
 ※「接続エラーのため、アドオンをダウンロードできませんでした。」と表示されてインストール出来ない時はリンクを右クリックしてxpiファイルをダウンロードし、メニューのツール→アドオン（またはCtrl+Shift+A）で表示されたアドオンマネージャーのページにxpiファイルをドラッグ＆ドロップして下さい。  
 
@@ -46,12 +46,14 @@
 * [KOSHIAN 引用をポップアップで表示 改](https://github.com/akoya-tomo/koshian_popup_quote_kai/) **v1.6以上**と組み合わせてご使用ください。  
 
 ## 既知の不具合
-* ![\(New\)](images/new.png "New") 引用したときに引用符と文章の間に空白が挿入されたり、引用符だけの行が挿入されることがある
+* 引用したときに引用符と文章の間に空白が挿入されたり、引用符だけの行が挿入されることがある
   - 作者の環境で発生しないので原因不明ですが、応急対策として「引用符と文章の間の空白を削除」オプションを追加しました。  
     AAなどの意図的な先頭の空白も削除されるので、不具合が発生しない環境ではオプションを無効にしてください。  
     このオプションが有効でも不具合が発生するようでしたらご連絡ください。別の対策に変更します。  
 
 ## 更新履歴
+* v1.6.0 2019-05-09
+  - ふたばのリロードの仕様変更に対応
 * v1.5.0 2018-09-02
   - 「引用符と文章の間の空白を削除」オプションを追加
   - [KOSHIAN 自動リンク生成](https://addons.mozilla.org/ja/firefox/addon/koshian-autolink-futaba/)（[改](https://github.com/akoya-tomo/koshian_autolink_futaba_kai/)）の表示ボタンを引用しないように修正
