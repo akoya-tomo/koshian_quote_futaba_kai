@@ -2,7 +2,7 @@
     "manifest_version":2,
     "name":"KOSHIAN 引用メニュー 改",
 
-    "version":"1.6.0",
+    "version":"1.6.1",
 
     "description":"引用メニューを表示します",
 
@@ -17,7 +17,7 @@
     "content_scripts":[
         {
             "matches":["*://*.2chan.net/*"],
-            "exclude_matches":["*://*.2chan.net/*/src/*"],
+            "exclude_matches":["*://*.2chan.net/*/src/*", "*://*.2chan.net/bin/*"],
             "js":["res.js"],
             "css":["style.css"]
         }
