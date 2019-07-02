@@ -128,8 +128,12 @@ class QuoteMenu {
         let text = "";
         for(let i = 0, lines = this.selection.split(/\n|\r\n/); i < lines.length; ++i){
             if (lines[i]) {
-                if (delete_unnecessary_space) lines[i] = lines[i].replace(/^\s+/, "");
-                if (!lines[i]) continue;
+                if (delete_unnecessary_space) {
+                    lines[i] = lines[i].replace(/^\s+/, "");
+                }
+                if (!lines[i]) {
+                    continue;
+                }
             }
             text += `>${lines[i]}\n`;
         }
@@ -220,7 +224,9 @@ function getResponseText() {
         }
     }
 
-    if (!thre_rtd) return "";
+    if (!thre_rtd) {
+        return "";
+    }
 
     let blockquote = thre_rtd.getElementsByTagName("blockquote")[0];
 
@@ -273,9 +279,9 @@ function getResponseNo() {
                     return number_button.textContent;
                 }
             } else {
-                let number_buttons = thre_rtd.getElementsByClassName("KOSHIAN_NumberButton");
-                if (number_buttons.length) {
-                    return number_buttons[0].textContent;
+                let number_button = thre_rtd.getElementsByClassName("KOSHIAN_NumberButton")[0];
+                if (number_button) {
+                    return number_button.textContent;
                 }
             }
         }
@@ -347,7 +353,7 @@ function getResponseIdIp() {
                     if (node.nodeType == Node.TEXT_NODE) {
                         let matches2 = node.nodeValue.match(/.*\)/);
                         if (matches2) {
-                            return matches1[0]+matches2[0];
+                            return matches1[0] + matches2[0];
                         }
                     }
                     return matches1[0];
@@ -390,10 +396,14 @@ function getSelectedText(use_select) {
 
     if (res_filename) {
         sel = getResponseFilename();
-        if (sel) return sel;
+        if (sel) {
+            return sel;
+        }
     }
 
-    if (use_select) sel = window.getSelection().toString();
+    if (use_select) {
+        sel = window.getSelection().toString();
+    }
 
     if (sel.length == 0) {
         sel = getResponseText();
@@ -529,14 +539,18 @@ function process(beg = 0){
 
     if (dels.length) {
         end = dels.length - 1; 
-        if (beg >= end) return;
+        if (beg >= end) {
+            return;
+        }
         for (let i = beg; i < end; ++i) {
             quickputNumberButton(dels[i+1]);
         }
     } else {
         let responses = document.getElementsByClassName("rtd");
         end = responses.length;
-        if (beg >= end) return;
+        if (beg >= end) {
+            return;
+        }
         for (let i = beg; i < end; ++i) {
             putNumberButton(responses[i]);
         }
