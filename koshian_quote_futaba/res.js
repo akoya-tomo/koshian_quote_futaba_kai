@@ -558,7 +558,8 @@ function main() {
     quote_menu = new QuoteMenu();
 
     document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseup", onMouseUp);
+    //document.addEventListener("mouseup", onMouseUp);
+    document.addEventListener("contextmenu", onMouseUp);    // Gesturefy対策
     document.addEventListener("mousedown", onMouseDown);
     document.addEventListener("blur", onBlur);
 
