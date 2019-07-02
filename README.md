@@ -27,7 +27,7 @@
 
 ## インストール
 **GitHub**  
-[![インストールボタン](images/install_button.png "クリックでアドオンをインストール")](https://github.com/akoya-tomo/koshian_quote_futaba_kai/releases/download/v1.6.0/koshian_quote_futaba_kai-1.6.0-fx.xpi)  
+[![インストールボタン](images/install_button.png "クリックでアドオンをインストール")](https://github.com/akoya-tomo/koshian_quote_futaba_kai/releases/download/v1.6.1/koshian_quote_futaba_kai-1.6.1-fx.xpi)  
 
 ※「接続エラーのため、アドオンをダウンロードできませんでした。」と表示されてインストール出来ない時はリンクを右クリックしてxpiファイルをダウンロードし、メニューのツール→アドオン（またはCtrl+Shift+A）で表示されたアドオンマネージャーのページにxpiファイルをドラッグ＆ドロップして下さい。  
 
@@ -50,10 +50,13 @@
   - 作者の環境で発生しないので原因不明ですが、応急対策として「引用符と文章の間の空白を削除」オプションを追加しました。  
     AAなどの意図的な先頭の空白も削除されるので、不具合が発生しない環境ではオプションを無効にしてください。  
     このオプションが有効でも不具合が発生するようでしたらご連絡ください。別の対策に変更します。  
-* ![\(New\)](images/new.png "New") [Gesturefy](https://addons.mozilla.org/ja/firefox/addon/gesturefy/)でホイールジェスチャーやロッカージェスチャーに右ボタンを割り当てしているとホイールジェスチャー・ロッカージェスチャー終了時に引用メニューが表示されることがある
-  - 現時点では仕様となります。どうしても表示させたくない時は[Foxy Gestures](https://addons.mozilla.org/ja/firefox/addon/foxy-gestures/)などのこの不具合が発生しないマウスジェスチャーの使用をご検討ください。  
+* ~~[Gesturefy](https://addons.mozilla.org/ja/firefox/addon/gesturefy/)でホイールジェスチャーやロッカージェスチャーに右ボタンを割り当てしているとホイールジェスチャー・ロッカージェスチャー終了時に引用メニューが表示されることがある~~
+  - v1.6.1で修正しました。  
 
 ## 更新履歴
+* v1.6.1 2019-07-02
+  - Gesturefyでホイール・ロッカージェスチャー終了時に引用メニューが表示されることがある不具合を修正
+  - リロードの監視を修正
 * v1.6.0 2019-05-09
   - ふたばのリロードの仕様変更に対応
 * v1.5.0 2018-09-02
