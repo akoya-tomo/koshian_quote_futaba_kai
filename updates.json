@@ -2,7 +2,10 @@
   "addons": {
     "{A3B61A1A-E4C1-11E7-B853-22ED1C573ADE}": {
       "updates": [
-        { "version": "1.6.1", "update_link": "https://github.com/akoya-tomo/koshian_quote_futaba_kai/releases/download/v1.6.1/koshian_quote_futaba_kai-1.6.1-fx.xpi" }
+        { "version": "1.6.1",
+          "update_link": "https://github.com/akoya-tomo/koshian_quote_futaba_kai/releases/download/v1.6.1/koshian_quote_futaba_kai-1.6.1-fx.xpi",
+          "update_info_url": "https://github.com/akoya-tomo/koshian_quote_futaba_kai/releases/download/v1.6.1/update_info.html"
+        }
       ]
     }
   }
