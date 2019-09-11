@@ -15,4 +15,4 @@ echo "addon_ver = $addon_ver"
 filename="${OUTPUT_DIR}/${addon_name}-${addon_ver}.zip"
 echo "filename = $filename"
 
-zip -v -r -9 ${filename} * -x "*.bak" ".eslint*"
+zip -r -9 ${filename} * -x "*.bak" ".eslint*"

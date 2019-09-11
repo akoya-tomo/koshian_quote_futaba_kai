@@ -27,7 +27,7 @@
 
 ## インストール
 **GitHub**  
-[![インストールボタン](images/install_button.png "クリックでアドオンをインストール")](https://github.com/akoya-tomo/koshian_quote_futaba_kai/releases/download/v1.6.1/koshian_quote_futaba_kai-1.6.1-fx.xpi)  
+[![インストールボタン](images/install_button.png "クリックでアドオンをインストール")](https://github.com/akoya-tomo/koshian_quote_futaba_kai/releases/download/v1.6.2/koshian_quote_futaba_kai-1.6.2-fx.xpi)  
 
 ※「接続エラーのため、アドオンをダウンロードできませんでした。」と表示されてインストール出来ない時はリンクを右クリックしてxpiファイルをダウンロードし、メニューのツール→アドオン（またはCtrl+Shift+A）で表示されたアドオンマネージャーのページにxpiファイルをドラッグ＆ドロップして下さい。  
 
@@ -54,6 +54,8 @@
   - v1.6.1で修正しました。  
 
 ## 更新履歴
+* v1.6.2 2019-09-11
+  - コピー操作でKOSHIAN 返信フォームを固定 改で閉じた返信フォームが開かない不具合を修正
 * v1.6.1 2019-07-02
   - Gesturefyでホイール・ロッカージェスチャー終了時に引用メニューが表示されることがある不具合を修正
   - リロードの監視を修正

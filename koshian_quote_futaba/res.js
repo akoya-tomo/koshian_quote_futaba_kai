@@ -139,7 +139,6 @@ class QuoteMenu {
         }
 
         this.addToTextarea(text);
-        document.dispatchEvent(new CustomEvent("KOSHIAN_quote"));
     }
 
     copy() {
@@ -161,6 +160,8 @@ class QuoteMenu {
         if(text[text.length - 1] != `\n`){
             textarea.value += `\n`;
         }
+
+        document.dispatchEvent(new CustomEvent("KOSHIAN_quote"));
     }
 
     moveToTextarea() {
@@ -286,7 +287,7 @@ function getResponseNo() {
             }
         }
         for (let node = thre_rtd.firstChild; node; node = node.nextSibling) {
-            if (node.tagName == "BLOCKQUOTE") {
+            if (node.nodeName == "BLOCKQUOTE") {
                 return "";
             } else if (node.nodeType == Node.TEXT_NODE) {
                 let matches = node.nodeValue.match(/No\.[0-9]+/);
@@ -339,14 +340,14 @@ function getResponseIdIp() {
 
     if (thre_rtd) {
         for (let node = thre_rtd.firstChild; node; node = node.nextSibling) {
-            if (node.tagName == "BLOCKQUOTE") {
+            if (node.nodeName == "BLOCKQUOTE") {
                 return "";
             } else if (node.nodeType == Node.TEXT_NODE) {
                 let matches = node.nodeValue.match(/(ID:\S{8}|IP:\w+[.:]\w+\.\*\(.+\))/);
                 if (matches) {
                     return matches[0];
                 }
-            } else if (node.tagName == "A") {
+            } else if (node.nodeName == "A") {
                 let matches1 = node.name.match(/I[DP]:\S{8}/);
                 if (matches1) {
                     node = node.nextSibling;
@@ -469,7 +470,7 @@ function putNumberButton(block) {
 
     for (let node = block.firstChild; node; node = node.nextSibling) {
         // blockの子要素を検索
-        if (node.tagName == "BLOCKQUOTE") {
+        if (node.nodeName == "BLOCKQUOTE") {
             return;
         } else if (node.nodeType == Node.TEXT_NODE) {
             let matches = node.nodeValue.match(/(.*)(No\.[0-9]+)(.*)/);
@@ -495,7 +496,7 @@ function putNumberButton(block) {
 function quickputNumberButton(del) {
     for (let node = del.previousSibling; node; node = node.previousSibling) {
         // delの前方を検索（通常はdelの一つ前のnodeがNo.）
-        if (node.tagName == "A" && node.className == "KOSHIAN_NumberButton") {
+        if (node.nodeName == "A" && node.className == "KOSHIAN_NumberButton") {
             // 既存のNo.ボタンがあればonclick再設定
             node.onclick = quickQuote;
             return;
