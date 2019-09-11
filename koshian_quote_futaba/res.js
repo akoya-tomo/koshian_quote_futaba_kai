@@ -139,7 +139,6 @@ class QuoteMenu {
         }
 
         this.addToTextarea(text);
-        document.dispatchEvent(new CustomEvent("KOSHIAN_quote"));
     }
 
     copy() {
@@ -161,6 +160,8 @@ class QuoteMenu {
         if(text[text.length - 1] != `\n`){
             textarea.value += `\n`;
         }
+
+        document.dispatchEvent(new CustomEvent("KOSHIAN_quote"));
     }
 
     moveToTextarea() {
