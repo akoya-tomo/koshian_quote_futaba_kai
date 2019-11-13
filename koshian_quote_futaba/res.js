@@ -27,6 +27,7 @@ let delete_unnecessary_space = true;
 let serverName = document.domain.match(/^[^.]+/);
 let pathName = location.pathname.match(/[^/]+/);
 let serverFullPath = serverName + "_" + pathName;
+let has_cno = document.getElementsByClassName("cno").length > 0;
 
 class QuoteMenu {
     constructor() {
@@ -466,6 +467,13 @@ function putNumberButton(block) {
         return;
     }
 
+    let cnw = block.getElementsByClassName("cnw")[0];
+    if (cnw) {
+        cnw.classList.add("KOSHIAN_NumberButton");
+        cnw.onclick = quickQuote;
+        return;
+    }
+
     for (let node = block.firstChild; node; node = node.nextSibling) {
         // blockの子要素を検索
         if (node.nodeName == "BLOCKQUOTE") {
@@ -480,7 +488,6 @@ function putNumberButton(block) {
                 btn.href="javascript:void(0)";
                 btn.textContent = matches[2];
                 btn.onclick = quickQuote;
-                btn.style.color = "inherit";
                 block.insertBefore(text1, node);
                 block.insertBefore(btn, node);
                 block.insertBefore(text2, node);
@@ -509,7 +516,6 @@ function quickputNumberButton(del) {
                 btn.href="javascript:void(0)";
                 btn.textContent = matches[2];
                 btn.onclick = quickQuote;
-                btn.style.color = "inherit";
                 block.insertBefore(text1, node);
                 block.insertBefore(btn, node);
                 block.insertBefore(text2, node);
@@ -536,7 +542,7 @@ function process(beg = 0){
     let dels = document.getElementsByClassName("del");
     let end;
 
-    if (dels.length) {
+    if (dels.length && !has_cno) {
         end = dels.length - 1; 
         if (beg >= end) {
             return;
@@ -578,7 +584,7 @@ function main() {
 
     if (quickquote_number) {
         let del = document.querySelector(".del");
-        if (del) {
+        if (del && !has_cno) {
             quickputNumberButton(del);
         } else {
             let thre = document.querySelector(".thre");
