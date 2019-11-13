@@ -274,16 +274,14 @@ function getResponseNo() {
 
     if (thre_rtd) {
         if (quickquote_number) {
+            let number_button;
             if (thre) {
-                let number_button = document.querySelector(".thre>.KOSHIAN_NumberButton");
-                if (number_button) {
-                    return number_button.textContent;
-                }
+                number_button = document.querySelector(".thre > .cno") || document.querySelector(".thre > .KOSHIAN_NumberButton");
             } else {
-                let number_button = thre_rtd.getElementsByClassName("KOSHIAN_NumberButton")[0];
-                if (number_button) {
-                    return number_button.textContent;
-                }
+                number_button =  thre_rtd.getElementsByClassName("cno")[0] || thre_rtd.getElementsByClassName("KOSHIAN_NumberButton")[0];
+            }
+            if (number_button) {
+                return number_button.textContent;
             }
         }
         for (let node = thre_rtd.firstChild; node; node = node.nextSibling) {
