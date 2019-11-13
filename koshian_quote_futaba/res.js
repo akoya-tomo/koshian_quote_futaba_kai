@@ -460,10 +460,10 @@ function quickQuote() {
 }
 
 function putNumberButton(block) {
-    let number_buttons = block.getElementsByClassName("KOSHIAN_NumberButton");
-    if (number_buttons.length){
+    let number_button = block.getElementsByClassName("KOSHIAN_NumberButton")[0];
+    if (number_button){
         // 既存のNo.ボタンがあればonclick再設定
-        number_buttons[0].onclick = quickQuote;
+        number_button.onclick = quickQuote;
         return;
     }
 
