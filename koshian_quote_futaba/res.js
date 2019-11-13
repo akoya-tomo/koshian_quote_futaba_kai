@@ -27,6 +27,7 @@ let delete_unnecessary_space = true;
 let serverName = document.domain.match(/^[^.]+/);
 let pathName = location.pathname.match(/[^/]+/);
 let serverFullPath = serverName + "_" + pathName;
+let has_cno = document.getElementsByClassName("cno").length > 0;
 
 class QuoteMenu {
     constructor() {
@@ -274,16 +275,14 @@ function getResponseNo() {
 
     if (thre_rtd) {
         if (quickquote_number) {
+            let number_button;
             if (thre) {
-                let number_button = document.querySelector(".thre>.KOSHIAN_NumberButton");
-                if (number_button) {
-                    return number_button.textContent;
-                }
+                number_button = document.querySelector(".thre > .cno") || document.querySelector(".thre > .KOSHIAN_NumberButton");
             } else {
-                let number_button = thre_rtd.getElementsByClassName("KOSHIAN_NumberButton")[0];
-                if (number_button) {
-                    return number_button.textContent;
-                }
+                number_button =  thre_rtd.getElementsByClassName("cno")[0] || thre_rtd.getElementsByClassName("KOSHIAN_NumberButton")[0];
+            }
+            if (number_button) {
+                return number_button.textContent;
             }
         }
         for (let node = thre_rtd.firstChild; node; node = node.nextSibling) {
@@ -461,10 +460,17 @@ function quickQuote() {
 }
 
 function putNumberButton(block) {
-    let number_buttons = block.getElementsByClassName("KOSHIAN_NumberButton");
-    if (number_buttons.length){
+    let number_button = block.getElementsByClassName("KOSHIAN_NumberButton")[0];
+    if (number_button){
         // 既存のNo.ボタンがあればonclick再設定
-        number_buttons[0].onclick = quickQuote;
+        number_button.onclick = quickQuote;
+        return;
+    }
+
+    let cnw = block.getElementsByClassName("cnw")[0];
+    if (cnw) {
+        cnw.classList.add("KOSHIAN_NumberButton");
+        cnw.onclick = quickQuote;
         return;
     }
 
@@ -482,7 +488,6 @@ function putNumberButton(block) {
                 btn.href="javascript:void(0)";
                 btn.textContent = matches[2];
                 btn.onclick = quickQuote;
-                btn.style.color = "inherit";
                 block.insertBefore(text1, node);
                 block.insertBefore(btn, node);
                 block.insertBefore(text2, node);
@@ -511,7 +516,6 @@ function quickputNumberButton(del) {
                 btn.href="javascript:void(0)";
                 btn.textContent = matches[2];
                 btn.onclick = quickQuote;
-                btn.style.color = "inherit";
                 block.insertBefore(text1, node);
                 block.insertBefore(btn, node);
                 block.insertBefore(text2, node);
@@ -538,7 +542,7 @@ function process(beg = 0){
     let dels = document.getElementsByClassName("del");
     let end;
 
-    if (dels.length) {
+    if (dels.length && !has_cno) {
         end = dels.length - 1; 
         if (beg >= end) {
             return;
@@ -580,7 +584,7 @@ function main() {
 
     if (quickquote_number) {
         let del = document.querySelector(".del");
-        if (del) {
+        if (del && !has_cno) {
             quickputNumberButton(del);
         } else {
             let thre = document.querySelector(".thre");

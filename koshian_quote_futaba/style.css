@@ -26,3 +26,19 @@
 {
     background-color: #91C9F7;
 }
+
+.KOSHIAN_NumberButton
+{
+    text-decoration: underline;
+}
+
+.KOSHIAN_NumberButton:hover
+{
+    color: red;
+    cursor: pointer;
+}
+
+a.KOSHIAN_NumberButton
+{
+    color: inherit;
+}
