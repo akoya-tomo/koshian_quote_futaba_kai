@@ -195,49 +195,16 @@ class QuoteMenu {
 
 function getResponseText() {
     let pointed = document.elementFromPoint(mcx, mcy);
-    let thre_rtd = null;
-
-    for (let elem = pointed; elem; elem = elem.parentElement) {
-        let class_name = elem.className;
-        if (class_name == "rtd" || class_name == "thre" || class_name == "KOSHIAN_response") {
-            thre_rtd = elem;
-            break;
-        }
-        if (elem.tagName == "BLOCKQUOTE") {
-            let inner_text = elem.innerText;
-            if (elem.getElementsByClassName("KOSHIAN_PreviewSwitch").length) {
-                inner_text = inner_text.replace(/\[見る\]|\[隠す\](\n|\r\n)?/g, "");
-            }
-            inner_text = inner_text.replace(/(\n|\r\n)>*(\n|\r\n)/g, "\n").replace(/^(\n|\r\n)+/, "");
-            if (quote_only_unquoted) {
-                let text = "";
-                for(let i = 0, lines = inner_text.split(/\n|\r\n/); i < lines.length; ++i){
-                    if (lines[i].indexOf(">") !== 0) {
-                        text += `${lines[i]}\n`;
-                    }
-                }
-                if(text.length){
-                    text = text.slice(0,-1);
-                    return text;
-                } else if (res_number) {
-                    return "";
-                }
-            }
-            return inner_text;
-        }
-    }
+    let thre_rtd = pointed.closest(".rtd, .thre, .KOSHIAN_response");
 
     if (!thre_rtd) {
         return "";
     }
 
-    let blockquote = thre_rtd.getElementsByTagName("blockquote")[0];
+    let blockquote = thre_rtd.querySelector(":scope > blockquote");
 
     if (blockquote) {
-        let inner_text = blockquote.innerText;
-        if (blockquote.getElementsByClassName("KOSHIAN_PreviewSwitch").length) {
-            inner_text = inner_text.replace(/\[見る\]|\[隠す\](\n|\r\n)?/g, "");
-        }
+        let inner_text = getInnerText(blockquote, /KOSHIAN_PreviewSwitch|KOSHIAN_response/);
         inner_text = inner_text.replace(/(\n|\r\n)>*(\n|\r\n)/g, "\n").replace(/^(\n|\r\n)+/, "");
         if (quote_only_unquoted) {
             let text = "";
@@ -459,6 +426,32 @@ function quickQuote() {
 
     quote_menu.selection = sel;
     quote_menu.quote();
+}
+
+/**
+ * 要素のテキストを指定したクラス名のテキストを除外して取得
+ * @param {Element} element テキストを取得する要素
+ * @param {string|RegExp} class_name テキスト取得を除外するクラス名
+ * @return {string} 取得したテキスト
+ */
+function getInnerText(element, class_name) {
+    let text = "";
+    if (!element) {
+        return text;
+    }
+    for (let node = element.firstChild; node; node = node.nextSibling) {
+        if (class_name.test(node.className)) {
+            continue;
+        } else if (node.nodeName == "FONT") {
+            // 引用（fontタグ）は更に子ノードのテキストを取得
+            text += getInnerText(node, class_name);
+        } else if (node.nodeName == "BR") {
+            text += "\n";
+        } else {
+            text += node.textContent;
+        }
+    }
+    return text;
 }
 
 function putNumberButton(block) {
