@@ -27,6 +27,7 @@ let delete_unnecessary_space = true;
 let serverName = document.domain.match(/^[^.]+/);
 let pathName = location.pathname.match(/[^/]+/);
 let serverFullPath = serverName + "_" + pathName;
+let has_del = document.getElementsByClassName("del").length > 0;
 let has_cno = document.getElementsByClassName("cno").length > 0;
 
 class QuoteMenu {
@@ -209,7 +210,7 @@ function getResponseText() {
         if (quote_only_unquoted) {
             let text = "";
             for(let i = 0, lines = inner_text.split(/\n|\r\n/); i < lines.length; ++i){
-                if (lines[i].indexOf(">") !== 0) {
+                if (!/^>/.test(lines[i])) {
                     text += `${lines[i]}\n`;
                 }
             }
@@ -227,32 +228,12 @@ function getResponseText() {
 
 function getResponseNo() {
     let pointed = document.elementFromPoint(mcx, mcy);
-    let thre = false;
-    let thre_rtd = null;
-
-    for (let elem = pointed; elem; elem = elem.parentElement) {
-        let class_name = elem.className;
-        if (class_name == "rtd" || class_name == "KOSHIAN_response") {
-            thre_rtd = elem;
-            break;
-        } else if (class_name == "thre") {
-            thre_rtd = elem;
-            thre = true;
-            break;
-        }
-    }
+    let thre_rtd = pointed.closest(".rtd, .thre, .KOSHIAN_response");
 
     if (thre_rtd) {
-        if (quickquote_number) {
-            let number_button;
-            if (thre) {
-                number_button = document.querySelector(".thre > .cno") || document.querySelector(".thre > .KOSHIAN_NumberButton");
-            } else {
-                number_button =  thre_rtd.getElementsByClassName("cno")[0] || thre_rtd.getElementsByClassName("KOSHIAN_NumberButton")[0];
-            }
-            if (number_button) {
-                return number_button.textContent;
-            }
+        let number_button = thre_rtd.querySelector(":scope > .cno") || thre_rtd.querySelector(":scope > .KOSHIAN_NumberButton");
+        if (number_button) {
+            return number_button.textContent;
         }
         for (let node = thre_rtd.firstChild; node; node = node.nextSibling) {
             if (node.nodeName == "BLOCKQUOTE") {
@@ -270,23 +251,22 @@ function getResponseNo() {
 
 function getResponseFilename() {
     let pointed = document.elementFromPoint(mcx, mcy);
-    let anchor = "";
+    let anchor = null;
 
     if (pointed.tagName == "A") {
         anchor = pointed;
-    // futaba lightboxのポップアップでは引用メニューを無効
-    } else if (pointed.parentElement.tagName == "A" && pointed.className != "fancybox-image") {
+    } else if (pointed.parentElement.tagName == "A" && pointed.className != "fancybox-image") { // futaba lightboxのポップアップでは引用メニューを無効
         anchor = pointed.parentElement;
-    // WebM再生画面でのaタグ検索
     } else if (pointed.tagName == "VIDEO") {
+        // WebM再生画面でのaタグ検索
         let elem = pointed.parentElement.nextElementSibling;
         if (elem.tagName == "A") {
             anchor = elem;
         }
     }
 
-    if (anchor) {
-        let matches = anchor.href.match(/\/(([sf].?)*[0-9]+\.[0-9A-Za-z]+$)/);
+    if (anchor && anchor.href) {
+        let matches = anchor.href.match(/\/(([sf].?)?[0-9]+\.[0-9A-Za-z]+$)/);
         if (matches) {
             return matches[1];
         }
@@ -296,15 +276,7 @@ function getResponseFilename() {
 
 function getResponseIdIp() {
     let pointed = document.elementFromPoint(mcx, mcy);
-    let thre_rtd = "";
-
-    for (let elem = pointed; elem; elem = elem.parentElement) {
-        let class_name = elem.className;
-        if (class_name == "rtd" || class_name == "thre" || class_name == "KOSHIAN_response") {
-            thre_rtd = elem;
-            break;
-        }
-    }
+    let thre_rtd = pointed.closest(".rtd, .thre, .KOSHIAN_response");
 
     if (thre_rtd) {
         for (let node = thre_rtd.firstChild; node; node = node.nextSibling) {
@@ -329,10 +301,8 @@ function getResponseIdIp() {
                 }
             }
         }
-        return "";
-    } else {
-        return "";
     }
+    return "";
 }
 
 // 何故か必要
@@ -454,23 +424,23 @@ function getInnerText(element, class_name) {
     return text;
 }
 
-function putNumberButton(block) {
-    let number_button = block.getElementsByClassName("KOSHIAN_NumberButton")[0];
+function putNumberButton(parent) {
+    let number_button = parent.getElementsByClassName("KOSHIAN_NumberButton")[0];
     if (number_button){
         // 既存のNo.ボタンがあればonclick再設定
         number_button.onclick = quickQuote;
         return;
     }
 
-    let cnw = block.getElementsByClassName("cnw")[0];
+    let cnw = parent.getElementsByClassName("cnw")[0];
     if (cnw) {
         cnw.classList.add("KOSHIAN_NumberButton");
         cnw.onclick = quickQuote;
         return;
     }
 
-    for (let node = block.firstChild; node; node = node.nextSibling) {
-        // blockの子要素を検索
+    for (let node = parent.firstChild; node; node = node.nextSibling) {
+        // parentの子要素を検索
         if (node.nodeName == "BLOCKQUOTE") {
             return;
         } else if (node.nodeType == Node.TEXT_NODE) {
@@ -483,10 +453,10 @@ function putNumberButton(block) {
                 btn.href="javascript:void(0)";
                 btn.textContent = matches[2];
                 btn.onclick = quickQuote;
-                block.insertBefore(text1, node);
-                block.insertBefore(btn, node);
-                block.insertBefore(text2, node);
-                block.removeChild(node);
+                parent.insertBefore(text1, node);
+                parent.insertBefore(btn, node);
+                parent.insertBefore(text2, node);
+                parent.removeChild(node);
                 return;
             }
         }
@@ -534,10 +504,10 @@ let last_process_num = 0;
 function process(beg = 0){
     //let start_time = Date.now();  //処理時間計測開始（開発用）
 
-    let dels = document.getElementsByClassName("del");
     let end;
 
-    if (dels.length && !has_cno) {
+    if (!has_cno && has_del) {
+        let dels = document.getElementsByClassName("del");
         end = dels.length - 1; 
         if (beg >= end) {
             return;
@@ -578,11 +548,11 @@ function main() {
     document.addEventListener("blur", onBlur);
 
     if (quickquote_number) {
-        let del = document.querySelector(".del");
+        let del = document.querySelector(".thre > .del");
         if (del && !has_cno) {
             quickputNumberButton(del);
         } else {
-            let thre = document.querySelector(".thre");
+            let thre = document.getElementsByClassName("thre")[0];
             if (thre) {
                 putNumberButton(thre);
             }
