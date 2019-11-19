@@ -299,6 +299,11 @@ function getResponseIdIp() {
                     }
                     return matches1[0];
                 }
+            } else if (node.classList.contains("cnw")) {
+                let matches = node.textContent.match(/(ID:\S{8}|IP:\w+[.:]\w+\.\*\(.+\))/);
+                if (matches) {
+                    return matches[0];
+                }
             }
         }
     }

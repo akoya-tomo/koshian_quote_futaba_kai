@@ -28,7 +28,7 @@
 
 ## インストール
 **GitHub**  
-[![インストールボタン](images/install_button.png "クリックでアドオンをインストール")](https://github.com/akoya-tomo/koshian_quote_futaba_kai/releases/download/v1.7.1/koshian_quote_futaba_kai-1.7.1-fx.xpi)  
+[![インストールボタン](images/install_button.png "クリックでアドオンをインストール")](https://github.com/akoya-tomo/koshian_quote_futaba_kai/releases/download/v1.7.2/koshian_quote_futaba_kai-1.7.2-fx.xpi)  
 
 ※「接続エラーのため、アドオンをダウンロードできませんでした。」と表示されてインストール出来ない時はリンクを右クリックしてxpiファイルをダウンロードし、メニューのツール→アドオン（またはCtrl+Shift+A）で表示されたアドオンマネージャーのページにxpiファイルをドラッグ＆ドロップして下さい。  
 
@@ -55,6 +55,8 @@
   - v1.6.1で修正しました。  
 
 ## 更新履歴
+* v1.7.2 2019-11-19
+  - レスNo.のメニュー化によりID・IPが引用できない不具合を修正
 * v1.7.1 2019-11-15
   - 改行だけの行を引用から除外するように修正
   - KOSHIAN 自動リンク生成（改）のプレビューボタンの引用からの除外処理を修正
