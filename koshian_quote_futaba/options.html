@@ -4,10 +4,23 @@
 
 <head>
   <meta charset="utf-8">
+  <style type="text/css">
+    .group {margin-bottom: 1.5em;}
+  </style>
 </head>
 
 <body>
   <p>
+    <input id="use_quote_menu" type="checkbox">
+    <label for="use_quote_menu">引用メニューを使用する</label>
+    <br>
+    <input id="quickquote_number" type="checkbox">
+    <label for="quickquote_number">引用ボタンを付ける</label>
+  </p>
+  <fieldset style="min-width: min-content;" class="group">
+    <legend>
+      引用メニュー
+    </legend>
     <input id="show_idip" type="checkbox">
     <label for="show_idip">"ID･IP"を表示</label>
     <br>
@@ -25,8 +38,11 @@
     <br>
     <input id="show_copymove" type="checkbox">
     <label for="show_copymove">"コピーして移動"を表示</label>
-  </p>
-  <p>
+  </fieldset>
+  <fieldset style="min-width: min-content;" class="group">
+    <legend>
+      引用動作
+    </legend>
     <input id="res_filename" type="checkbox">
     <label for="res_filename">画像ファイル名を引用する</label>
     <br>
@@ -36,12 +52,9 @@
     <input id="quote_only_unquoted" type="checkbox">
     <label for="quote_only_unquoted">非引用部分のみ引用する</label>
     <br>
-    <input id="quickquote_number" type="checkbox">
-    <label for="quickquote_number">No.をクリックで引用する</label>
-    <br>
     <input id="delete_unnecessary_space" type="checkbox">
     <label for="delete_unnecessary_space">引用符と文章の間の空白を削除</label>
-  </p>
+  </fieldset>
   <script src="options.js"></script>
 
 </body>
