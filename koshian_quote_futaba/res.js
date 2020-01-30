@@ -529,9 +529,7 @@ function main() {
         }
     }
 
-    document.addEventListener("KOSHIAN_popupQuote", () => {
-        putPopupNumberButton();
-    });
+    document.addEventListener("KOSHIAN_popupQuote", putPopupNumberButton);
 
     function checkFutabaReload(target) {
         let status = "";
