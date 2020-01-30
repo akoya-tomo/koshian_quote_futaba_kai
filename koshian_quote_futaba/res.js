@@ -13,6 +13,7 @@ let mcx = 0;
 let mcy = 0;
 let mbutton = 0;
 let textarea = null;
+let use_quote_menu = true;
 let show_idip = false;
 let show_number = false;
 let show_quote = true;
@@ -389,7 +390,9 @@ function onContextMenu() {
         return;
     }
 
-    quote_menu.show(sel);
+    if (use_quote_menu) {
+        quote_menu.show(sel);
+    }
 }
 
 function quickQuote() {
@@ -611,6 +614,7 @@ function onError() {
 }
 
 function onSettingGot(result) {
+    use_quote_menu = safeGetValue(result.use_quote_menu, true);
     show_idip = safeGetValue(result.show_idip, false);
     show_number = safeGetValue(result.show_number, false);
     show_quote = safeGetValue(result.show_quote, true);

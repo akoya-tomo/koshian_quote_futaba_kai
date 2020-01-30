@@ -6,6 +6,7 @@ function safeGetValue(value, default_value) {
 
 function saveOptions() {
   browser.storage.local.set({
+    use_quote_menu:document.getElementById("use_quote_menu").checked,
     show_idip:document.getElementById("show_idip").checked,
     show_number:document.getElementById("show_number").checked,
     show_quote:document.getElementById("show_quote").checked,
@@ -18,9 +19,17 @@ function saveOptions() {
     quickquote_number:document.getElementById("quickquote_number").checked,
     delete_unnecessary_space:document.getElementById("delete_unnecessary_space").checked
   });
+
+  document.getElementById("show_idip").disabled = !document.getElementById("use_quote_menu").checked;
+  document.getElementById("show_number").disabled = !document.getElementById("use_quote_menu").checked;
+  document.getElementById("show_quote").disabled = !document.getElementById("use_quote_menu").checked;
+  document.getElementById("show_quotemove").disabled = !document.getElementById("use_quote_menu").checked;
+  document.getElementById("show_copy").disabled = !document.getElementById("use_quote_menu").checked;
+  document.getElementById("show_copymove").disabled = !document.getElementById("use_quote_menu").checked;
 }
 
 function setCurrentChoice(result) {
+  document.getElementById("use_quote_menu").checked = safeGetValue(result.use_quote_menu, true);
   document.getElementById("show_idip").checked = safeGetValue(result.show_idip, false);
   document.getElementById("show_number").checked = safeGetValue(result.show_number, false);
   document.getElementById("show_quote").checked = safeGetValue(result.show_quote, true);
@@ -32,6 +41,13 @@ function setCurrentChoice(result) {
   document.getElementById("quote_only_unquoted").checked = safeGetValue(result.quote_only_unquoted, false);
   document.getElementById("quickquote_number").checked = safeGetValue(result.quickquote_number, false);
   document.getElementById("delete_unnecessary_space").checked = safeGetValue(result.delete_unnecessary_space, true);
+
+  document.getElementById("show_idip").disabled = !document.getElementById("use_quote_menu").checked;
+  document.getElementById("show_number").disabled = !document.getElementById("use_quote_menu").checked;
+  document.getElementById("show_quote").disabled = !document.getElementById("use_quote_menu").checked;
+  document.getElementById("show_quotemove").disabled = !document.getElementById("use_quote_menu").checked;
+  document.getElementById("show_copy").disabled = !document.getElementById("use_quote_menu").checked;
+  document.getElementById("show_copymove").disabled = !document.getElementById("use_quote_menu").checked;
 
   for(let i = 0,inputs = document.getElementsByTagName("input"); i < inputs.length; ++i){
     inputs[i].onclick = saveOptions;
