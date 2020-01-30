@@ -14,6 +14,7 @@ let mcy = 0;
 let mbutton = 0;
 let textarea = null;
 let use_quote_menu = true;
+let quickquote_number = false;
 let show_idip = false;
 let show_number = false;
 let show_quote = true;
@@ -23,13 +24,10 @@ let show_copymove = true;
 let res_filename = false;
 let res_number = false;
 let quote_only_unquoted = false;
-let quickquote_number = false;
 let delete_unnecessary_space = true;
 let serverName = document.domain.match(/^[^.]+/);
 let pathName = location.pathname.match(/[^/]+/);
 let serverFullPath = serverName + "_" + pathName;
-let has_del = document.getElementsByClassName("del").length > 0;
-let has_cno = document.getElementsByClassName("cno").length > 0;
 
 class QuoteMenu {
     constructor() {
@@ -440,62 +438,31 @@ function putNumberButton(parent) {
         return;
     }
 
-    let cnw = parent.getElementsByClassName("cnw")[0];
-    if (cnw) {
-        cnw.classList.add("KOSHIAN_NumberButton");
-        cnw.onclick = quickQuote;
-        return;
-    }
+    let btn = document.createElement("a");
+    btn.className = "KOSHIAN_NumberButton";
+    btn.href = "javascript:void(0)";
+    btn.textContent = "＞";
+    btn.onclick = quickQuote;
 
-    for (let node = parent.firstChild; node; node = node.nextSibling) {
-        // parentの子要素を検索
-        if (node.nodeName == "BLOCKQUOTE") {
-            return;
-        } else if (node.nodeType == Node.TEXT_NODE) {
-            let matches = node.nodeValue.match(/(.*)(No\.[0-9]+)(.*)/);
-            if (matches) {
-                let text1 = document.createTextNode(matches[1]);
-                let text2 = document.createTextNode(matches[3]);
-                let btn = document.createElement("a");
-                btn.className = "KOSHIAN_NumberButton";
-                btn.href="javascript:void(0)";
-                btn.textContent = matches[2];
-                btn.onclick = quickQuote;
-                parent.insertBefore(text1, node);
-                parent.insertBefore(btn, node);
-                parent.insertBefore(text2, node);
-                parent.removeChild(node);
+    let cno = parent.getElementsByClassName("cno")[0];
+    if (!cno) {
+        // 旧レイアウト
+        for (let node = parent.firstChild; node; node = node.nextSibling) {
+            if (node.nodeName == "BLOCKQUOTE") {
                 return;
+            } else if (node.nodeType == Node.TEXT_NODE) {
+                let matches = node.nodeValue.match(/(.*)(No\.[0-9]+)(.*)/);
+                if (matches) {
+                    cno = node;
+                    btn.style.marginLeft = "15px";
+                    break;
+                }
             }
         }
     }
-}
 
-function quickputNumberButton(del) {
-    for (let node = del.previousSibling; node; node = node.previousSibling) {
-        // delの前方を検索（通常はdelの一つ前のnodeがNo.）
-        if (node.nodeName == "A" && node.className == "KOSHIAN_NumberButton") {
-            // 既存のNo.ボタンがあればonclick再設定
-            node.onclick = quickQuote;
-            return;
-        } else if (node.nodeType == Node.TEXT_NODE) {
-            let matches = node.nodeValue.match(/(.*)(No\.[0-9]+)(.*)/);
-            if (matches) {
-                let block = node.parentNode;
-                let text1 = document.createTextNode(matches[1]);
-                let text2 = document.createTextNode(matches[3]);
-                let btn = document.createElement("a");
-                btn.className = "KOSHIAN_NumberButton";
-                btn.href="javascript:void(0)";
-                btn.textContent = matches[2];
-                btn.onclick = quickQuote;
-                block.insertBefore(text1, node);
-                block.insertBefore(btn, node);
-                block.insertBefore(text2, node);
-                block.removeChild(node);
-                return;
-            }
-        }
+    if (cno) {
+        parent.insertBefore(btn, cno.nextSibling);
     }
 }
 
@@ -512,26 +479,13 @@ let last_process_num = 0;
 function process(beg = 0){
     //let start_time = Date.now();  //処理時間計測開始（開発用）
 
-    let end;
-
-    if (!has_cno && has_del) {
-        let dels = document.getElementsByClassName("del");
-        end = dels.length - 1; 
-        if (beg >= end) {
-            return;
-        }
-        for (let i = beg; i < end; ++i) {
-            quickputNumberButton(dels[i+1]);
-        }
-    } else {
-        let responses = document.getElementsByClassName("rtd");
-        end = responses.length;
-        if (beg >= end) {
-            return;
-        }
-        for (let i = beg; i < end; ++i) {
-            putNumberButton(responses[i]);
-        }
+    let responses = document.getElementsByClassName("rtd");
+    let end = responses.length;
+    if (beg >= end) {
+        return;
+    }
+    for (let i = beg; i < end; ++i) {
+        putNumberButton(responses[i]);
     }
 
     last_process_num = end;
@@ -556,14 +510,9 @@ function main() {
     document.addEventListener("blur", onBlur);
 
     if (quickquote_number) {
-        let del = document.querySelector(".thre > .del");
-        if (del && !has_cno) {
-            quickputNumberButton(del);
-        } else {
-            let thre = document.getElementsByClassName("thre")[0];
-            if (thre) {
-                putNumberButton(thre);
-            }
+        let thre = document.getElementsByClassName("thre")[0];
+        if (thre) {
+            putNumberButton(thre);
         }
 
         process();
@@ -615,6 +564,7 @@ function onError() {
 
 function onSettingGot(result) {
     use_quote_menu = safeGetValue(result.use_quote_menu, true);
+    quickquote_number = safeGetValue(result.quickquote_number, false);
     show_idip = safeGetValue(result.show_idip, false);
     show_number = safeGetValue(result.show_number, false);
     show_quote = safeGetValue(result.show_quote, true);
@@ -624,7 +574,6 @@ function onSettingGot(result) {
     res_filename = safeGetValue(result.res_filename, false);
     res_number = safeGetValue(result.res_number, false);
     quote_only_unquoted = safeGetValue(result.quote_only_unquoted, false);
-    quickquote_number = safeGetValue(result.quickquote_number, false);
     delete_unnecessary_space = safeGetValue(result.delete_unnecessary_space, true);
 
     main();
